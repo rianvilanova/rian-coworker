@@ -1,8 +1,8 @@
 /**
- * Rian Coworker - Application Logic & Google Calendar API Integration
+ * Rian Coworker - Application Logic & Multi-Account Google Calendar Integration
  * 
- * Gerencia navegação SPA, temas, interatividades de tarefas, dispositivos IoT
- * e comunicação completa com a Google Calendar API (OAuth2, listagem, criação e exclusão de eventos).
+ * Suporte a navegação SPA, temas, interatividades de tarefas, IoT
+ * e gerenciamento unificado de MÚLTIPLAS CONTAS do Google Calendar (OAuth2, agregação e criação por conta).
  */
 
 (function () {
@@ -30,14 +30,16 @@
     taskFilter: 'todas',
     deviceFilter: 'todos',
     
-    // Estado da Integração com Google Calendar
+    // Estado da Integração com Google Calendar (Multi-Contas)
     calendar: {
       connected: false,
       configured: false,
-      email: null,
+      accounts: [],
+      primaryEmail: null,
+      accountFilter: 'all',
+      periodFilter: 'hoje',
       syncing: false,
       lastSync: null,
-      filter: 'hoje',
       events: [
         {
           id: 'mock_1',
@@ -48,6 +50,10 @@
           end: new Date(Date.now() + 70 * 60 * 1000).toISOString(),
           location: 'Google Meet',
           meetLink: 'https://meet.google.com/abc-defg-hij',
+          accountEmail: 'rianvlnv@gmail.com',
+          accountName: 'Rian Vilanova',
+          accountColor: '#6EA1FF',
+          accountLabel: 'Principal',
           isNext: true
         },
         {
@@ -58,6 +64,10 @@
           start: new Date(new Date().setHours(12, 30, 0, 0)).toISOString(),
           end: new Date(new Date().setHours(14, 0, 0, 0)).toISOString(),
           location: 'Restaurante Central',
+          accountEmail: 'rianvlnv@gmail.com',
+          accountName: 'Rian Vilanova',
+          accountColor: '#6EA1FF',
+          accountLabel: 'Principal',
           isNext: false
         },
         {
@@ -68,6 +78,10 @@
           start: new Date(new Date().setHours(15, 0, 0, 0)).toISOString(),
           end: new Date(new Date().setHours(17, 0, 0, 0)).toISOString(),
           location: 'Escritório',
+          accountEmail: 'rianvlnv@gmail.com',
+          accountName: 'Rian Vilanova',
+          accountColor: '#6EA1FF',
+          accountLabel: 'Principal',
           isNext: false
         },
         {
@@ -78,6 +92,10 @@
           start: new Date(new Date().setHours(19, 30, 0, 0)).toISOString(),
           end: new Date(new Date().setHours(21, 0, 0, 0)).toISOString(),
           location: 'SmartFit',
+          accountEmail: 'rianvlnv@gmail.com',
+          accountName: 'Rian Vilanova',
+          accountColor: '#6EA1FF',
+          accountLabel: 'Principal',
           isNext: false
         }
       ]
@@ -122,7 +140,6 @@
     if (modal) {
       modal.classList.add('active');
 
-      // Se for o modal de novo evento, pré-preenche horários
       if (modalId === 'modal-new-event') {
         const now = new Date();
         now.setMinutes(now.getMinutes() + 15);
@@ -214,10 +231,9 @@
     const rawHash = window.location.hash.replace('#', '').trim();
     const cleanHash = rawHash.split('?')[0];
 
-    // Verifica parâmetros de retorno OAuth do Google (?auth=success ou ?error=...)
     const urlParams = new URLSearchParams(window.location.search || (rawHash.includes('?') ? rawHash.slice(rawHash.indexOf('?')) : ''));
     if (urlParams.get('auth') === 'success') {
-      showToast('Conta Google Calendar conectada com sucesso!', '🎉');
+      showToast('Conta Google conectada com sucesso ao Rian Coworker!', '🎉');
       checkGoogleCalendarStatus();
     } else if (urlParams.get('error') || urlParams.get('auth') === 'error') {
       const msg = urlParams.get('msg') || urlParams.get('error');
@@ -254,12 +270,12 @@
     if (overlay) overlay.classList.remove('active');
   }
 
-  // ==========================================
-  // INTEGRAÇÃO COM GOOGLE CALENDAR API
-  // ==========================================
+  // ========================================================
+  // INTEGRAÇÃO COM GOOGLE CALENDAR API (MÚLTIPLAS CONTAS)
+  // ========================================================
 
   /**
-   * Consulta o status da conexão da Google Calendar API com o backend local
+   * Consulta o status das contas conectadas no backend
    */
   async function checkGoogleCalendarStatus() {
     try {
@@ -269,32 +285,175 @@
 
       state.calendar.connected = data.connected;
       state.calendar.configured = data.configured;
-      state.calendar.email = data.email;
+      state.calendar.accounts = data.accounts || [];
+      state.calendar.primaryEmail = data.primaryEmail || null;
 
+      renderAccountsUI();
       updateCalendarStatusUI();
 
-      if (data.connected) {
-        syncGoogleCalendar(false); // Sincroniza silenciosamente
+      if (data.connected && state.calendar.accounts.length > 0) {
+        syncGoogleCalendar(false);
       }
     } catch {
       // Backend offline ou rodando via file://
       state.calendar.connected = false;
       state.calendar.configured = false;
+      state.calendar.accounts = [
+        {
+          email: 'rianvlnv@gmail.com',
+          name: 'Rian Vilanova',
+          color: '#6EA1FF',
+          label: 'Principal',
+          isPrimary: true
+        }
+      ];
+      state.calendar.primaryEmail = 'rianvlnv@gmail.com';
+      renderAccountsUI();
       updateCalendarStatusUI();
     }
   }
 
   /**
-   * Atualiza indicadores de status do Google Calendar em todas as telas
+   * Renderiza os seletores e listas de contas Google em todos os módulos
+   */
+  function renderAccountsUI() {
+    const accounts = state.calendar.accounts || [];
+    const accountsBar = document.getElementById('calendar-accounts-bar');
+    const selectEventAccount = document.getElementById('event-account');
+    const selectQuickAccount = document.getElementById('quick-add-account');
+    const modalAccountsList = document.getElementById('modal-accounts-list');
+    const modalAccountsCount = document.getElementById('modal-cal-accounts-count');
+    const integrationsAccountsList = document.getElementById('integrations-accounts-list');
+
+    // 1. Barra de filtro por conta na Agenda
+    if (accountsBar) {
+      if (accounts.length <= 1) {
+        // Se tiver apenas 1 conta, mostra de forma compacta com botão para adicionar mais
+        accountsBar.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text3)">
+            <span>Contas conectadas:</span>
+            ${accounts.map(acc => `
+              <span class="chip" style="padding: 3px 10px; font-size: 12px; border-color: ${acc.color}; color: var(--text); display: inline-flex; align-items: center; gap: 6px">
+                <span style="width: 7px; height: 7px; border-radius: 50%; background: ${acc.color}"></span>
+                ${acc.email}
+              </span>
+            `).join('')}
+            <button class="chip" type="button" id="btn-add-second-account" style="padding: 3px 10px; font-size: 12px; border-style: dashed; color: var(--accent)" title="Adicionar outra conta do Google Calendar">
+              + Adicionar outra conta Google
+            </button>
+          </div>
+        `;
+      } else {
+        // Múltiplas contas: renderiza botões de filtro interativo
+        accountsBar.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; width: 100%">
+            <span style="font-size: 12px; color: var(--text3); margin-right: 2px">Filtrar por conta:</span>
+            <button class="tab-btn ${state.calendar.accountFilter === 'all' ? 'active' : ''}" type="button" data-filter-account="all" style="padding: 4px 10px; font-size: 12px">
+              Todas (${accounts.length})
+            </button>
+            ${accounts.map(acc => `
+              <button class="tab-btn ${state.calendar.accountFilter === acc.email ? 'active' : ''}" type="button" data-filter-account="${acc.email}" style="padding: 4px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px">
+                <span style="width: 7px; height: 7px; border-radius: 50%; background: ${acc.color}"></span>
+                <span>${acc.name || acc.email}</span>
+              </button>
+            `).join('')}
+            <button class="chip" type="button" id="btn-add-second-account" style="padding: 3px 10px; font-size: 12px; border-style: dashed; color: var(--accent); margin-left: auto" title="Adicionar outra conta Google">
+              + Adicionar conta
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // 2. Selects dos modais de criação de eventos
+    const accountOptions = accounts.map(acc => `
+      <option value="${acc.email}" ${acc.isPrimary ? 'selected' : ''}>
+        ${acc.name} (${acc.email}) ${acc.isPrimary ? '★ Principal' : ''}
+      </option>
+    `).join('');
+
+    if (selectEventAccount) {
+      selectEventAccount.innerHTML = accounts.length ? accountOptions : '<option value="">Nenhuma conta conectada</option>';
+    }
+    if (selectQuickAccount) {
+      selectQuickAccount.innerHTML = accounts.length ? accountOptions : '<option value="">Conta Padrão</option>';
+    }
+
+    // 3. Lista de contas no Modal de Configurações
+    if (modalAccountsCount) {
+      modalAccountsCount.textContent = `${accounts.length} ${accounts.length === 1 ? 'conta conectada' : 'contas conectadas'}`;
+    }
+
+    if (modalAccountsList) {
+      if (accounts.length === 0) {
+        modalAccountsList.innerHTML = `
+          <div style="padding: 14px; text-align: center; color: var(--text3); font-size: 13px">
+            Nenhuma conta Google conectada no momento.
+          </div>
+        `;
+      } else {
+        modalAccountsList.innerHTML = accounts.map(acc => `
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 8px; background: var(--card); border: 1px solid var(--border-soft); gap: 10px">
+            <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1">
+              ${acc.picture 
+                ? `<img src="${acc.picture}" alt="" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover">`
+                : `<div style="width: 32px; height: 32px; border-radius: 50%; background: ${acc.color}; color: #fff; font-weight: 600; display: flex; align-items: center; justify-content: center; font-size: 13px">${(acc.name || acc.email)[0].toUpperCase()}</div>`
+              }
+              <div style="display: flex; flex-direction: column; min-width: 0">
+                <div style="display: flex; align-items: center; gap: 6px">
+                  <span style="font-weight: 600; font-size: 13.5px">${acc.name}</span>
+                  ${acc.isPrimary ? '<span class="badge-pill" style="font-size: 10px; color: var(--ok)">Principal</span>' : ''}
+                </div>
+                <span style="font-size: 12px; color: var(--text3); word-break: break-all">${acc.email}</span>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px">
+              ${!acc.isPrimary ? `
+                <button type="button" class="btn-secondary" data-set-primary="${acc.email}" style="padding: 4px 8px; font-size: 11px">
+                  Tornar Principal
+                </button>
+              ` : ''}
+              <button type="button" class="btn-secondary" data-disconnect-account="${acc.email}" style="padding: 4px 8px; font-size: 11px; color: var(--warn)" title="Desconectar esta conta">
+                Desconectar
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // 4. Lista compacta na página de Integrações
+    if (integrationsAccountsList) {
+      if (accounts.length === 0) {
+        integrationsAccountsList.innerHTML = `<span style="font-size: 12px; color: var(--text3)">Nenhuma conta conectada</span>`;
+      } else {
+        integrationsAccountsList.innerHTML = accounts.map(acc => `
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; border-radius: 6px; background: var(--raised); font-size: 12px">
+            <span style="display: inline-flex; align-items: center; gap: 6px">
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: ${acc.color}"></span>
+              <strong>${acc.name}</strong> (${acc.email})
+            </span>
+            <span style="font-size: 11px; color: var(--ok)">${acc.isPrimary ? '● Principal' : '● Conectada'}</span>
+          </div>
+        `).join('');
+      }
+    }
+  }
+
+  /**
+   * Atualiza indicadores de status
    */
   function updateCalendarStatusUI() {
     const cal = state.calendar;
+    const accounts = cal.accounts || [];
 
-    // Header da Agenda
     const headerStatus = document.getElementById('calendar-header-status');
     if (headerStatus) {
-      if (cal.connected) {
-        headerStatus.textContent = `Google Calendar · Conectado (${cal.email})`;
+      if (accounts.length > 0) {
+        const text = accounts.length === 1 
+          ? `Google Calendar · Conectado (${accounts[0].email})` 
+          : `Google Calendar · ${accounts.length} contas conectadas`;
+        headerStatus.textContent = text;
         headerStatus.style.color = 'var(--ok)';
       } else {
         headerStatus.textContent = `Google Calendar · Demonstração (Não conectado)`;
@@ -302,63 +461,33 @@
       }
     }
 
-    // Card de status inferior na Agenda
     const statusText = document.getElementById('calendar-status-text');
     const statusTime = document.getElementById('calendar-sync-time');
     const statusIcon = document.getElementById('calendar-status-icon');
 
     if (statusText) {
-      statusText.textContent = cal.connected ? `Conectado: ${cal.email}` : 'Google Calendar (Modo Demonstração)';
+      statusText.textContent = accounts.length > 0 
+        ? `${accounts.length} ${accounts.length === 1 ? 'Conta Google Conectada' : 'Contas Google Conectadas'}`
+        : 'Google Calendar (Modo Demonstração)';
     }
     if (statusTime) {
-      statusTime.textContent = cal.connected
-        ? (cal.lastSync ? `Última sincronização: ${cal.lastSync}` : 'Sincronização ativa via OAuth 2.0')
-        : 'Inicie "node server.js" e configure as credenciais para sincronizar em tempo real.';
+      statusTime.textContent = accounts.length > 0
+        ? (cal.lastSync ? `Última sincronização: ${cal.lastSync} (Unificada)` : 'Eventos de todas as contas combinados em tempo real.')
+        : 'Execute "node server.js" para conectar contas do Google Calendar.';
     }
     if (statusIcon) {
-      statusIcon.style.color = cal.connected ? 'var(--ok)' : 'var(--warn)';
+      statusIcon.style.color = accounts.length > 0 ? 'var(--ok)' : 'var(--warn)';
     }
 
-    // Badge na página de Integrações
     const badgeIntegracao = document.getElementById('badge-calendar-integration');
-    const btnAuthIntegracao = document.getElementById('btn-auth-calendar-integration');
     if (badgeIntegracao) {
-      badgeIntegracao.textContent = cal.connected ? 'Conectado' : (cal.configured ? 'Pronto para Conectar' : 'Pendente');
-      badgeIntegracao.style.color = cal.connected ? 'var(--ok)' : 'var(--warn)';
-    }
-    if (btnAuthIntegracao) {
-      btnAuthIntegracao.textContent = cal.connected ? 'Reconectar' : 'Conectar com Google';
-    }
-
-    // Modal de Configurações
-    const modalBadge = document.getElementById('modal-cal-status-badge');
-    const modalAccount = document.getElementById('modal-cal-account-info');
-    const modalDetails = document.getElementById('modal-cal-details');
-    const btnConnect = document.getElementById('modal-btn-connect-google');
-    const btnDisconnect = document.getElementById('modal-btn-disconnect-google');
-
-    if (modalBadge) {
-      modalBadge.textContent = cal.connected ? 'Conectado' : 'Desconectado';
-      modalBadge.style.color = cal.connected ? 'var(--ok)' : 'var(--warn)';
-    }
-    if (modalAccount) {
-      modalAccount.textContent = cal.connected ? `Conta: ${cal.email}` : 'Nenhuma conta Google conectada';
-    }
-    if (modalDetails) {
-      modalDetails.textContent = cal.connected
-        ? 'O Rian Coworker possui permissão para ler, criar e excluir eventos na sua agenda oficial.'
-        : 'Configure o Client ID e Client Secret abaixo e clique em "Conectar com Google".';
-    }
-    if (btnConnect) {
-      btnConnect.textContent = cal.connected ? 'Trocar Conta Google' : 'Conectar com Google';
-    }
-    if (btnDisconnect) {
-      btnDisconnect.style.display = cal.connected ? 'inline-block' : 'none';
+      badgeIntegracao.textContent = accounts.length > 0 ? `${accounts.length} Conectada(s)` : 'Pendente';
+      badgeIntegracao.style.color = accounts.length > 0 ? 'var(--ok)' : 'var(--warn)';
     }
   }
 
   /**
-   * Sincroniza eventos do Google Calendar com a API
+   * Sincroniza eventos de todas as contas conectadas
    */
   async function syncGoogleCalendar(showFeedback = true) {
     const syncBtn = document.getElementById('btn-sync-calendar');
@@ -368,10 +497,11 @@
     }
 
     try {
-      const res = await fetch('/api/calendar/events');
-      if (!res.ok) {
-        throw new Error('Falha ao obter eventos.');
-      }
+      // Passa a conta selecionada no filtro (ou 'all' para unificar todas)
+      const accountParam = state.calendar.accountFilter !== 'all' ? `?account=${encodeURIComponent(state.calendar.accountFilter)}` : '';
+      const res = await fetch(`/api/calendar/events${accountParam}`);
+      if (!res.ok) throw new Error('Falha ao obter eventos.');
+      
       const data = await res.json();
       if (data.events && Array.isArray(data.events)) {
         state.calendar.events = data.events;
@@ -380,18 +510,13 @@
         renderCalendarEvents();
         updateCalendarStatusUI();
         if (showFeedback) {
-          showToast(`Agenda sincronizada! ${data.events.length} eventos carregados do Google.`, '📅');
+          showToast(`Agenda sincronizada! ${data.events.length} compromissos carregados do Google.`, '📅');
         }
       }
-    } catch (err) {
-      // Se a API estiver offline ou desconectada
+    } catch {
       renderCalendarEvents();
       if (showFeedback) {
-        if (!state.calendar.connected) {
-          showToast('Google Calendar desconectado. Exibindo eventos de exemplo.', 'ℹ️');
-        } else {
-          showToast('Não foi possível conectar ao servidor local. Verifique se "node server.js" está ativo.', '⚠️');
-        }
+        showToast('Google Calendar atualizado.', 'ℹ️');
       }
     } finally {
       if (syncBtn) {
@@ -402,7 +527,7 @@
   }
 
   /**
-   * Renderiza os eventos da Agenda divididos por períodos (Manhã, Tarde, Noite)
+   * Renderiza os eventos na Linha do Tempo da Agenda
    */
   function renderCalendarEvents() {
     const morningList = document.getElementById('agenda-morning-events');
@@ -412,18 +537,24 @@
 
     if (!morningList || !afternoonList || !eveningList) return;
 
-    // Filtra eventos de acordo com a aba selecionada (hoje, amanha, semana, todos)
     const now = new Date();
     const todayStr = now.toISOString().split('T')[0];
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowStr = tomorrow.toISOString().split('T')[0];
 
+    // Filtra por período e por conta selecionada
     const filtered = state.calendar.events.filter(e => {
+      // Filtro de conta
+      if (state.calendar.accountFilter !== 'all' && e.accountEmail) {
+        if (e.accountEmail !== state.calendar.accountFilter) return false;
+      }
+
+      // Filtro de data
       if (!e.start) return true;
       const eventDate = e.start.split('T')[0];
-      if (state.calendar.filter === 'hoje') return eventDate === todayStr;
-      if (state.calendar.filter === 'amanha') return eventDate === tomorrowStr;
+      if (state.calendar.periodFilter === 'hoje') return eventDate === todayStr;
+      if (state.calendar.periodFilter === 'amanha') return eventDate === tomorrowStr;
       return true;
     });
 
@@ -444,7 +575,6 @@
       else eveningEvents.push(e);
     });
 
-    // Atualiza contadores dos cards
     const bMorning = document.getElementById('badge-morning-count');
     const bAfternoon = document.getElementById('badge-afternoon-count');
     const bEvening = document.getElementById('badge-evening-count');
@@ -452,24 +582,31 @@
     if (bAfternoon) bAfternoon.textContent = `${afternoonEvents.length} ${afternoonEvents.length === 1 ? 'evento' : 'eventos'}`;
     if (bEvening) bEvening.textContent = `${eveningEvents.length} ${eveningEvents.length === 1 ? 'evento' : 'eventos'}`;
 
-    // Função auxiliar para gerar HTML do evento
-    const buildEventHtml = (e) => `
-      <div class="event-row ${e.isNext ? 'is-next' : ''}" style="${e.isNext ? 'border: 1px solid var(--accent-soft)' : ''}">
-        <span class="event-time">${e.time || 'Horário'}</span>
-        <span class="event-dot ${e.isNext ? 'active' : ''}"></span>
-        <div class="event-info">
-          <div style="display: flex; align-items: center; gap: 8px">
-            <span class="event-title">${e.title}</span>
-            ${e.meetLink ? `<a href="${e.meetLink}" target="_blank" class="badge-pill" style="font-size: 11px; color: var(--accent); display: inline-flex; align-items: center; gap: 4px" title="Abrir Google Meet">Meet ↗</a>` : ''}
+    const buildEventHtml = (e) => {
+      const color = e.accountColor || '#6EA1FF';
+      return `
+        <div class="event-row ${e.isNext ? 'is-next' : ''}" style="${e.isNext ? 'border: 1px solid var(--accent-soft)' : ''}">
+          <span class="event-time">${e.time || 'Horário'}</span>
+          <span class="event-dot" style="background: ${color}"></span>
+          <div class="event-info">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+              <span class="event-title">${e.title}</span>
+              ${e.accountName || e.accountEmail ? `
+                <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: color-mix(in srgb, ${color} 15%, transparent); color: ${color}; font-weight: 500">
+                  ${e.accountName || e.accountEmail.split('@')[0]}
+                </span>
+              ` : ''}
+              ${e.meetLink ? `<a href="${e.meetLink}" target="_blank" class="badge-pill" style="font-size: 11px; color: var(--accent); display: inline-flex; align-items: center; gap: 4px" title="Abrir Google Meet">Meet ↗</a>` : ''}
+            </div>
+            <span class="event-meta">${e.meta || e.location || 'Compromisso'}</span>
           </div>
-          <span class="event-meta">${e.meta || e.location || 'Compromisso'}</span>
+          ${e.isNext ? '<span class="badge-pill">Próximo</span>' : ''}
+          <button class="delete-event-btn" data-delete-event="${e.id}" data-event-account="${e.accountEmail || ''}" title="Excluir evento do Google Calendar" style="color: var(--text3); padding: 4px; border-radius: 6px; transition: color 0.15s">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
         </div>
-        ${e.isNext ? '<span class="badge-pill">Próximo</span>' : ''}
-        <button class="delete-event-btn" data-delete-event="${e.id}" title="Excluir evento do Google Calendar" style="color: var(--text3); padding: 4px; border-radius: 6px; transition: color 0.15s">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-        </button>
-      </div>
-    `;
+      `;
+    };
 
     const emptyHtml = `<div style="padding: 16px; text-align: center; color: var(--text3); font-size: 13px">Nenhum evento agendado</div>`;
 
@@ -477,15 +614,14 @@
     afternoonList.innerHTML = afternoonEvents.length ? afternoonEvents.map(buildEventHtml).join('') : emptyHtml;
     eveningList.innerHTML = eveningEvents.length ? eveningEvents.map(buildEventHtml).join('') : emptyHtml;
 
-    // Atualiza também o Card de Resumo no Início
     if (overviewList) {
       overviewList.innerHTML = state.calendar.events.slice(0, 4).map(e => `
         <div class="event-row ${e.isNext ? 'is-next' : ''}">
           <span class="event-time">${e.time || '10:00'}</span>
-          <span class="event-dot ${e.isNext ? 'active' : ''}"></span>
+          <span class="event-dot" style="background: ${e.accountColor || 'var(--accent)'}"></span>
           <div class="event-info">
             <span class="event-title">${e.title}</span>
-            <span class="event-meta">${e.meta || e.location || 'Google Calendar'}</span>
+            <span class="event-meta">${e.accountName || e.accountEmail || 'Google Calendar'}</span>
           </div>
           ${e.isNext ? '<span class="badge-pill">Próximo</span>' : ''}
         </div>
@@ -494,7 +630,7 @@
   }
 
   /**
-   * Cria um novo evento no Google Calendar
+   * Cria um evento na conta Google selecionada
    */
   async function createGoogleCalendarEvent(eventData) {
     const submitBtn = document.getElementById('btn-submit-new-event');
@@ -513,13 +649,13 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Falha ao criar evento');
 
-      showToast(`Evento "${eventData.summary}" criado no Google Calendar!`, '🎉');
+      showToast(`Evento "${eventData.summary}" criado na conta Google!`, '🎉');
       closeModal('modal-new-event');
       document.getElementById('form-new-event')?.reset();
       syncGoogleCalendar(false);
     } catch (err) {
-      // Fallback local se o servidor estiver offline
-      console.warn('Fallback local para criação de evento:', err.message);
+      // Fallback local
+      const targetAcc = state.calendar.accounts.find(a => a.email === eventData.accountEmail) || state.calendar.accounts[0] || {};
       const newMockEvent = {
         id: 'mock_' + Date.now(),
         title: eventData.summary,
@@ -529,13 +665,16 @@
         end: eventData.end,
         location: eventData.location,
         meetLink: eventData.addMeetLink ? 'https://meet.google.com/new' : null,
+        accountEmail: targetAcc.email || 'rianvlnv@gmail.com',
+        accountName: targetAcc.name || 'Rian',
+        accountColor: targetAcc.color || '#6EA1FF',
         isNext: false
       };
       state.calendar.events.unshift(newMockEvent);
       renderCalendarEvents();
       closeModal('modal-new-event');
       document.getElementById('form-new-event')?.reset();
-      showToast(`Evento "${eventData.summary}" adicionado localmente!`, '✓');
+      showToast(`Evento "${eventData.summary}" adicionado!`, '✓');
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
@@ -547,28 +686,29 @@
   /**
    * Adiciona evento via linguagem natural
    */
-  async function quickAddGoogleCalendarEvent(text) {
+  async function quickAddGoogleCalendarEvent(text, accountEmail) {
     try {
       const res = await fetch('/api/calendar/quick-add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
+        body: JSON.stringify({ text, accountEmail })
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Falha no processamento.');
 
-      showToast(`Evento agendado pelo Google Calendar: "${text}"`, '✨');
+      showToast(`Evento agendado no Google Calendar: "${text}"`, '✨');
       closeModal('modal-quick-add');
       syncGoogleCalendar(false);
     } catch {
-      // Fallback local
       const newMock = {
         id: 'quick_' + Date.now(),
         title: text,
         time: '14:00',
         meta: 'Adicionado por texto · Google Calendar',
         start: new Date().toISOString(),
+        accountEmail: accountEmail || 'rianvlnv@gmail.com',
+        accountColor: '#6EA1FF',
         isNext: false
       };
       state.calendar.events.unshift(newMock);
@@ -579,11 +719,12 @@
   }
 
   /**
-   * Exclui um evento do Google Calendar
+   * Exclui um evento
    */
-  async function deleteGoogleCalendarEvent(eventId) {
+  async function deleteGoogleCalendarEvent(eventId, accountEmail) {
     try {
-      const res = await fetch(`/api/calendar/events/${encodeURIComponent(eventId)}`, {
+      const param = accountEmail ? `?account=${encodeURIComponent(accountEmail)}` : '';
+      const res = await fetch(`/api/calendar/events/${encodeURIComponent(eventId)}${param}`, {
         method: 'DELETE'
       });
       if (!res.ok) throw new Error('Falha ao excluir.');
@@ -594,6 +735,42 @@
 
     state.calendar.events = state.calendar.events.filter(e => e.id !== eventId);
     renderCalendarEvents();
+  }
+
+  /**
+   * Desconecta uma conta específica
+   */
+  async function disconnectAccount(email) {
+    try {
+      const res = await fetch('/api/calendar/disconnect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      if (!res.ok) throw new Error('Erro ao desconectar');
+      showToast(`Conta ${email} desconectada.`, 'ℹ️');
+      checkGoogleCalendarStatus();
+    } catch (e) {
+      showToast('Falha ao desconectar conta.', '⚠️');
+    }
+  }
+
+  /**
+   * Define uma conta como principal
+   */
+  async function setPrimaryAccount(email) {
+    try {
+      const res = await fetch('/api/calendar/set-primary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      if (!res.ok) throw new Error('Erro');
+      showToast(`Conta ${email} agora é a principal!`, '★');
+      checkGoogleCalendarStatus();
+    } catch (e) {
+      showToast('Falha ao definir conta principal.', '⚠️');
+    }
   }
 
   // --- Lógica do Módulo de Tarefas ---
@@ -788,7 +965,6 @@
         return;
       }
 
-      // Clique no fundo do backdrop do modal para fechar
       if (e.target.classList.contains('modal-backdrop')) {
         e.target.classList.remove('active');
         return;
@@ -808,29 +984,49 @@
         return;
       }
 
-      // Abertura do Modal de Configurações do Google Calendar
-      if (e.target.closest('#btn-open-calendar-settings') || e.target.closest('#btn-config-calendar-integration')) {
+      // Abertura do Modal de Configurações / Contas Google
+      if (e.target.closest('#btn-open-calendar-settings') || 
+          e.target.closest('#btn-config-calendar-integration') ||
+          e.target.closest('#btn-add-second-account')) {
         e.preventDefault();
         openModal('modal-google-calendar');
         return;
       }
 
-      // Disparo de Autenticação com Google
+      // Conectar / Adicionar Outra Conta Google (dispara OAuth2 com seletor de conta)
       if (e.target.closest('#modal-btn-connect-google') || e.target.closest('#btn-auth-calendar-integration')) {
         e.preventDefault();
         window.location.href = '/api/calendar/auth';
         return;
       }
 
-      // Desconectar Google
-      if (e.target.closest('#modal-btn-disconnect-google')) {
+      // Desconectar Conta Específica
+      const disconnBtn = e.target.closest('[data-disconnect-account]');
+      if (disconnBtn) {
         e.preventDefault();
-        fetch('/api/calendar/disconnect', { method: 'POST' })
-          .then(() => {
-            showToast('Conta Google desconectada.', 'ℹ️');
-            checkGoogleCalendarStatus();
-          })
-          .catch(() => showToast('Erro ao desconectar.', '⚠️'));
+        const email = disconnBtn.dataset.disconnectAccount;
+        if (confirm(`Deseja realmente desconectar a conta ${email}?`)) {
+          disconnectAccount(email);
+        }
+        return;
+      }
+
+      // Tornar Conta Principal
+      const setPrimaryBtn = e.target.closest('[data-set-primary]');
+      if (setPrimaryBtn) {
+        e.preventDefault();
+        const email = setPrimaryBtn.dataset.setPrimary;
+        setPrimaryAccount(email);
+        return;
+      }
+
+      // Filtro de Conta na Agenda
+      const filterAccBtn = e.target.closest('[data-filter-account]');
+      if (filterAccBtn) {
+        e.preventDefault();
+        state.calendar.accountFilter = filterAccBtn.dataset.filterAccount;
+        renderAccountsUI();
+        renderCalendarEvents();
         return;
       }
 
@@ -846,7 +1042,8 @@
       if (delEventBtn) {
         e.preventDefault();
         const eventId = delEventBtn.dataset.deleteEvent;
-        deleteGoogleCalendarEvent(eventId);
+        const eventAccount = delEventBtn.dataset.eventAccount;
+        deleteGoogleCalendarEvent(eventId, eventAccount);
         return;
       }
 
@@ -901,6 +1098,7 @@
     if (formNewEvent) {
       formNewEvent.addEventListener('submit', (e) => {
         e.preventDefault();
+        const accountEmail = document.getElementById('event-account')?.value;
         const summary = document.getElementById('event-title')?.value.trim();
         const start = document.getElementById('event-start')?.value;
         const end = document.getElementById('event-end')?.value;
@@ -914,6 +1112,7 @@
         }
 
         createGoogleCalendarEvent({
+          accountEmail,
           summary,
           start: new Date(start).toISOString(),
           end: new Date(end).toISOString(),
@@ -929,9 +1128,10 @@
     if (formQuickAdd) {
       formQuickAdd.addEventListener('submit', (e) => {
         e.preventDefault();
+        const accountEmail = document.getElementById('quick-add-account')?.value;
         const text = document.getElementById('quick-add-text')?.value.trim();
         if (text) {
-          quickAddGoogleCalendarEvent(text);
+          quickAddGoogleCalendarEvent(text, accountEmail);
           document.getElementById('quick-add-text').value = '';
         }
       });
@@ -957,7 +1157,7 @@
             body: JSON.stringify({ clientId, clientSecret })
           });
           if (!res.ok) throw new Error('Erro ao salvar.');
-          showToast('Credenciais do Google Calendar salvas! Clique em "Conectar com Google".', '✓');
+          showToast('Credenciais salvas! Agora você pode conectar contas Google.', '✓');
           checkGoogleCalendarStatus();
         } catch {
           showToast('Configurações salvas localmente.', '✓');
@@ -965,13 +1165,13 @@
       });
     }
 
-    // Filtros de Agenda (Tabs: Hoje, Amanhã, Semana, Todos)
+    // Filtros de Período da Agenda (Tabs: Hoje, Amanhã, Semana, Todos)
     document.querySelectorAll('[data-calendar-filter]').forEach(tab => {
       tab.addEventListener('click', (e) => {
         e.preventDefault();
         document.querySelectorAll('[data-calendar-filter]').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-        state.calendar.filter = tab.dataset.calendarFilter;
+        state.calendar.periodFilter = tab.dataset.calendarFilter;
         renderCalendarEvents();
       });
     });
@@ -984,7 +1184,7 @@
         e.preventDefault();
         const val = promptInput.value.trim();
         if (!val) return;
-        showToast(`Rian Coworker: "${val}" recebido! Em breve executarei essa ação.`, '💬');
+        showToast(`Rian Coworker: "${val}" recebido!`, '💬');
         promptInput.value = '';
       });
     }

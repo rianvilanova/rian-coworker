@@ -155,24 +155,55 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
-  // 5. Desconectar conta Google
-  if (pathname === '/api/calendar/disconnect' && method === 'POST') {
+  // 5. Listar Contas Conectadas
+  if (pathname === '/api/calendar/accounts' && method === 'GET') {
     try {
-      calendarService.clearTokens();
-      return sendJson(res, 200, { success: true, message: 'Conta Google desconectada.' });
+      const accounts = calendarService.getAccounts();
+      const status = calendarService.getStatus();
+      return sendJson(res, 200, { accounts, primaryEmail: status.primaryEmail });
     } catch (err) {
       return sendJson(res, 500, { error: err.message });
     }
   }
 
-  // 6. Listar Eventos
+  // 6. Definir Conta Principal
+  if (pathname === '/api/calendar/set-primary' && method === 'POST') {
+    try {
+      const body = await readJsonBody(req);
+      if (!body.email) return sendJson(res, 400, { error: 'E-mail é obrigatório.' });
+      const result = calendarService.setPrimaryAccount(body.email);
+      return sendJson(res, 200, result);
+    } catch (err) {
+      return sendJson(res, 400, { error: err.message });
+    }
+  }
+
+  // 7. Desconectar conta Google (específica ou todas)
+  if (pathname === '/api/calendar/disconnect' && method === 'POST') {
+    try {
+      const body = await readJsonBody(req);
+      const email = body.email || searchParams.get('email');
+      if (email) {
+        const result = calendarService.removeAccount(email);
+        return sendJson(res, 200, { success: true, message: `Conta ${email} desconectada.`, result });
+      } else {
+        calendarService.clearAll();
+        return sendJson(res, 200, { success: true, message: 'Todas as contas Google foram desconectadas.' });
+      }
+    } catch (err) {
+      return sendJson(res, 500, { error: err.message });
+    }
+  }
+
+  // 8. Listar Eventos (Unificados ou por conta)
   if (pathname === '/api/calendar/events' && method === 'GET') {
     try {
       const events = await calendarService.listEvents({
         timeMin: searchParams.get('timeMin') || undefined,
         timeMax: searchParams.get('timeMax') || undefined,
-        maxResults: searchParams.get('maxResults') ? parseInt(searchParams.get('maxResults'), 10) : 25,
-        calendarId: searchParams.get('calendarId') || 'primary'
+        maxResults: searchParams.get('maxResults') ? parseInt(searchParams.get('maxResults'), 10) : 50,
+        calendarId: searchParams.get('calendarId') || 'primary',
+        accountEmail: searchParams.get('account') || undefined
       });
       return sendJson(res, 200, { events });
     } catch (err) {
@@ -180,37 +211,40 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
-  // 7. Criar Evento
+  // 9. Criar Evento em Conta Específica
   if (pathname === '/api/calendar/events' && method === 'POST') {
     try {
       const eventData = await readJsonBody(req);
       const calendarId = searchParams.get('calendarId') || 'primary';
-      const created = await calendarService.createEvent(eventData, calendarId);
+      const accountEmail = eventData.accountEmail || searchParams.get('account') || null;
+      const created = await calendarService.createEvent(eventData, accountEmail, calendarId);
       return sendJson(res, 201, { success: true, event: created });
     } catch (err) {
       return sendJson(res, 400, { error: err.message });
     }
   }
 
-  // 8. Adição Rápida de Evento (Linguagem Natural)
+  // 10. Adição Rápida de Evento (Linguagem Natural)
   if (pathname === '/api/calendar/quick-add' && method === 'POST') {
     try {
       const body = await readJsonBody(req);
       if (!body.text) {
         return sendJson(res, 400, { error: 'Campo "text" é obrigatório.' });
       }
-      const created = await calendarService.quickAdd(body.text, body.calendarId || 'primary');
+      const accountEmail = body.accountEmail || searchParams.get('account') || null;
+      const created = await calendarService.quickAdd(body.text, accountEmail, body.calendarId || 'primary');
       return sendJson(res, 201, { success: true, event: created });
     } catch (err) {
       return sendJson(res, 400, { error: err.message });
     }
   }
 
-  // 9. Excluir Evento (/api/calendar/events/{id})
+  // 11. Excluir Evento (/api/calendar/events/{id})
   if (pathname.startsWith('/api/calendar/events/') && method === 'DELETE') {
     const eventId = pathname.replace('/api/calendar/events/', '');
+    const accountEmail = searchParams.get('account') || null;
     try {
-      const result = await calendarService.deleteEvent(eventId, searchParams.get('calendarId') || 'primary');
+      const result = await calendarService.deleteEvent(eventId, accountEmail, searchParams.get('calendarId') || 'primary');
       return sendJson(res, 200, result);
     } catch (err) {
       return sendJson(res, 500, { error: err.message });
