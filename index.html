@@ -1,0 +1,1078 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Início · Rian Coworker</title>
+  
+  <!-- Google Fonts: Newsreader & DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap">
+  
+  <!-- Estilos da Aplicação -->
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Backdrop para menu mobile -->
+    <div id="mobile-overlay" class="mobile-overlay"></div>
+
+    <!-- Sidebar de Navegação -->
+    <aside id="sidebar" class="sidebar">
+      <!-- Marca / Logo -->
+      <div class="brand-header" data-navigate="inicio" title="Ir para Início">
+        <div class="brand-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path>
+          </svg>
+        </div>
+        <div style="display: flex; flex-direction: column">
+          <span class="brand-title">Rian Coworker</span>
+          <span class="brand-sub">Assistente pessoal</span>
+        </div>
+      </div>
+
+      <!-- Links de Navegação -->
+      <nav class="nav-section" aria-label="Menu principal">
+        <span class="nav-label">Módulos</span>
+        
+        <a class="nav-item active" href="#inicio" data-page="inicio">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="9" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="5" rx="1"></rect>
+            <rect x="14" y="12" width="7" height="9" rx="1"></rect>
+            <rect x="3" y="16" width="7" height="5" rx="1"></rect>
+          </svg>
+          <span>Início</span>
+        </a>
+
+        <a class="nav-item" href="#agenda" data-page="agenda">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+            <path d="M16 2v4M8 2v4M3 10h18"></path>
+          </svg>
+          <span>Agenda</span>
+          <span class="badge">4</span>
+        </a>
+
+        <a class="nav-item" href="#financas" data-page="financas">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"></path>
+            <path d="M16 13h2"></path>
+          </svg>
+          <span>Finanças</span>
+        </a>
+
+        <a class="nav-item" href="#casa" data-page="casa">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 11l9-8 9 8"></path>
+            <path d="M5 10v10h14V10"></path>
+          </svg>
+          <span>Casa e Alexa</span>
+        </a>
+
+        <a class="nav-item" href="#tarefas" data-page="tarefas">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+            <path d="M8 12l3 3 5-6"></path>
+          </svg>
+          <span>Tarefas</span>
+          <span id="nav-tasks-badge" class="badge">4</span>
+        </a>
+
+        <a class="nav-item" href="#integracoes" data-page="integracoes">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 0 1-12 0z"></path>
+            <path d="M12 18v4"></path>
+          </svg>
+          <span>Integrações</span>
+        </a>
+
+        <a class="nav-item" href="#roadmap" data-page="roadmap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 22V4M5 4h12l-2 4 2 4H5"></path>
+          </svg>
+          <span>Base do sistema</span>
+        </a>
+      </nav>
+
+      <!-- Rodapé da Sidebar -->
+      <div class="sidebar-footer">
+        <a class="nav-item" href="#configuracoes" data-page="configuracoes">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"></path>
+            <circle cx="16" cy="6" r="2"></circle>
+            <circle cx="10" cy="12" r="2"></circle>
+            <circle cx="18" cy="18" r="2"></circle>
+          </svg>
+          <span>Configurações</span>
+        </a>
+        <div class="sidebar-version">
+          <span>Versão 0.1 · fundação</span>
+          <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--ok)" title="Sistema operacional"></span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Área Principal de Conteúdo -->
+    <div class="main-wrapper">
+      
+      <!-- Topbar Fixa -->
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 12px">
+          <!-- Botão Mobile -->
+          <button id="mobile-toggle-btn" class="mobile-toggle-btn" aria-label="Abrir menu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+
+          <!-- Breadcrumbs -->
+          <div class="breadcrumbs">
+            <span style="cursor: pointer" data-navigate="inicio">Rian Coworker</span>
+            <span class="sep" aria-hidden="true">/</span>
+            <span id="breadcrumb-current" class="current">Início</span>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <span class="status-chip">
+            <span class="dot-status ok" aria-hidden="true"></span>
+            <span>Online</span>
+          </span>
+
+          <!-- Alternador de Tema -->
+          <button id="theme-toggle-btn" class="theme-toggle-btn" type="button" aria-label="Mudar para o modo claro">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+            </svg>
+            <span>Modo claro</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Corpo com as Páginas Dinâmicas -->
+      <main class="content-body">
+        
+        <!-- ==========================================
+             PÁGINA: INÍCIO (DASHBOARD PRINCIPAL)
+             ========================================== -->
+        <section id="page-inicio" class="page-view active">
+          <!-- Saudação + Prompt -->
+          <div style="display: flex; flex-direction: column; gap: 22px">
+            <div class="page-header">
+              <span class="header-date">Sábado, 17 de outubro de 2026</span>
+              <h1 class="serif-title">Bom dia.</h1>
+              <p id="greeting-summary" class="header-subtitle">Você tem 4 compromissos hoje e 4 tarefas em aberto.</p>
+            </div>
+
+            <!-- Caixa de Prompt Interativa -->
+            <form id="assistant-prompt-form" class="prompt-card">
+              <div class="prompt-input-row">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text3)" aria-hidden="true">
+                  <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path>
+                </svg>
+                <input id="assistant-prompt-input" class="prompt-input" type="text" aria-label="Peça algo ao assistente" placeholder="Peça algo ao Rian Coworker…">
+                <button type="submit" class="prompt-submit" aria-label="Enviar comando">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 19V5M5 12l7-7 7 7"></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="chips-row">
+                <button class="chip" type="button" data-prompt="Resumir minha semana">Resumir minha semana</button>
+                <button class="chip" type="button" data-prompt="Quanto gastei este mês?">Quanto gastei este mês?</button>
+                <button class="chip" type="button" data-prompt="Apagar as luzes da sala">Apagar as luzes da sala</button>
+                <button class="chip" type="button" data-prompt="Criar um lembrete para amanhã">Criar um lembrete</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Grade de Cards Resumidos -->
+          <div class="cards-grid">
+            
+            <!-- Card Agenda -->
+            <section class="card">
+              <div class="card-header">
+                <div class="card-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path>
+                  </svg>
+                </div>
+                <h2 class="card-title">Agenda de hoje</h2>
+                <a href="#agenda" class="card-action-link" data-navigate="agenda">Ver tudo →</a>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 4px">
+                <div class="event-row is-next">
+                  <span class="event-time">10:30</span>
+                  <span class="event-dot active"></span>
+                  <div class="event-info">
+                    <span class="event-title">Revisão semanal</span>
+                    <span class="event-meta">Foco · 45 min</span>
+                  </div>
+                  <span class="badge-pill">Em 25 min</span>
+                </div>
+                <div class="event-row">
+                  <span class="event-time">12:30</span>
+                  <span class="event-dot"></span>
+                  <div class="event-info">
+                    <span class="event-title">Almoço com a família</span>
+                    <span class="event-meta">Presencial</span>
+                  </div>
+                </div>
+                <div class="event-row">
+                  <span class="event-time">15:00</span>
+                  <span class="event-dot"></span>
+                  <div class="event-info">
+                    <span class="event-title">Sessão de estudo do projeto</span>
+                    <span class="event-meta">Em casa · 2 h</span>
+                  </div>
+                </div>
+                <div class="event-row">
+                  <span class="event-time">19:30</span>
+                  <span class="event-dot"></span>
+                  <div class="event-info">
+                    <span class="event-title">Academia</span>
+                    <span class="event-meta">Rotina</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Card Finanças -->
+            <section class="card">
+              <div class="card-header">
+                <div class="card-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"></path><path d="M16 13h2"></path>
+                  </svg>
+                </div>
+                <h2 class="card-title">Finanças</h2>
+                <a href="#financas" class="card-action-link" data-navigate="financas">Ver detalhes →</a>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 4px">
+                <span style="font-size: 12px; color: var(--text3)">Gasto no mês</span>
+                <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px">
+                  <span class="serif-number">R$ 3.420,00</span>
+                  <span style="font-size: 13px; color: var(--text2)">de R$ 5.000,00</span>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <div class="progress-track">
+                  <div class="progress-fill" style="width: 68%"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text2)">
+                  <span>68% do orçamento usado</span>
+                  <span>55% do mês passou</span>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 14px; border-top: 1px solid var(--border-soft)">
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
+                  <span style="width: 84px; flex: 0 0 84px; color: var(--text2)">Moradia</span>
+                  <div style="flex: 1; height: 6px; border-radius: 999px; background: var(--track2); overflow: hidden">
+                    <div style="height: 100%; width: 100%; border-radius: 999px; background: var(--accent)"></div>
+                  </div>
+                  <span style="width: 88px; flex: 0 0 88px; text-align: right; font-variant-numeric: tabular-nums">R$ 1.200,00</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
+                  <span style="width: 84px; flex: 0 0 84px; color: var(--text2)">Mercado</span>
+                  <div style="flex: 1; height: 6px; border-radius: 999px; background: var(--track2); overflow: hidden">
+                    <div style="height: 100%; width: 65%; border-radius: 999px; background: var(--bar)"></div>
+                  </div>
+                  <span style="width: 88px; flex: 0 0 88px; text-align: right; font-variant-numeric: tabular-nums">R$ 780,00</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
+                  <span style="width: 84px; flex: 0 0 84px; color: var(--text2)">Lazer</span>
+                  <div style="flex: 1; height: 6px; border-radius: 999px; background: var(--track2); overflow: hidden">
+                    <div style="height: 100%; width: 44%; border-radius: 999px; background: var(--bar)"></div>
+                  </div>
+                  <span style="width: 88px; flex: 0 0 88px; text-align: right; font-variant-numeric: tabular-nums">R$ 530,00</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- Card Casa e Alexa -->
+            <section class="card">
+              <div class="card-header">
+                <div class="card-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path>
+                  </svg>
+                </div>
+                <h2 class="card-title">Casa e Alexa</h2>
+                <a href="#casa" class="card-action-link" data-navigate="casa">Ver cômodos →</a>
+              </div>
+              <span id="devices-overview-count" style="font-size: 12px; color: var(--text3)">2 de 6 ligados</span>
+              
+              <div id="devices-overview-list" style="display: flex; flex-direction: column">
+                <!-- Preenchido via app.js -->
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px">
+                <span style="font-size: 12px; color: var(--text3)">Rotinas rápidas</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px">
+                  <button class="chip" type="button" data-routine="Bom dia">Bom dia</button>
+                  <button class="chip" type="button" data-routine="Boa noite">Boa noite</button>
+                  <button class="chip" type="button" data-routine="Saindo de casa">Saindo de casa</button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Card Tarefas -->
+            <section class="card">
+              <div class="card-header">
+                <div class="card-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="3"></rect><path d="M8 12l3 3 5-6"></path>
+                  </svg>
+                </div>
+                <h2 class="card-title">Tarefas</h2>
+                <a href="#tarefas" class="card-action-link" data-navigate="tarefas">Ver todas →</a>
+              </div>
+              <span id="tasks-overview-count" style="font-size: 12px; color: var(--text3)">1 de 5 concluídas</span>
+              
+              <div id="tasks-overview-list" style="display: flex; flex-direction: column">
+                <!-- Preenchido via app.js -->
+              </div>
+            </section>
+
+            <!-- Card Integrações -->
+            <section class="card">
+              <div class="card-header">
+                <div class="card-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 0 1-12 0z"></path><path d="M12 18v4"></path>
+                  </svg>
+                </div>
+                <h2 class="card-title">Integrações</h2>
+                <a href="#integracoes" class="card-action-link" data-navigate="integracoes">Gerenciar →</a>
+              </div>
+              <div style="display: flex; flex-direction: column">
+                <div style="display: flex; align-items: center; gap: 12px; padding: 11px 2px; border-bottom: 1px solid var(--border-soft)">
+                  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                    <span style="font-weight: 500">Google Calendar</span>
+                    <span style="font-size: 12px; color: var(--text3)">Eventos e lembretes</span>
+                  </div>
+                  <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: 12px; color: var(--ok); white-space: nowrap">
+                    <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--ok)"></span>
+                    Conectado
+                  </span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 11px 2px; border-bottom: 1px solid var(--border-soft)">
+                  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                    <span style="font-weight: 500">Amazon Alexa</span>
+                    <span style="font-size: 12px; color: var(--text3)">Dispositivos e rotinas</span>
+                  </div>
+                  <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: 12px; color: var(--warn); white-space: nowrap">
+                    <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--warn)"></span>
+                    Pendente
+                  </span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 11px 2px; border-bottom: 1px solid var(--border-soft)">
+                  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                    <span style="font-weight: 500">Open Finance</span>
+                    <span style="font-size: 12px; color: var(--text3)">Contas e transações</span>
+                  </div>
+                  <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: 12px; color: var(--warn); white-space: nowrap">
+                    <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--warn)"></span>
+                    Pendente
+                  </span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 11px 2px">
+                  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                    <span style="font-weight: 500">Notificações</span>
+                    <span style="font-size: 12px; color: var(--text3)">Avisos proativos</span>
+                  </div>
+                  <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: 12px; color: var(--plan); white-space: nowrap">
+                    <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--plan)"></span>
+                    Planejado
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            <!-- Card Base do sistema -->
+            <section class="card">
+              <div class="card-header">
+                <div class="card-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 22V4M5 4h12l-2 4 2 4H5"></path>
+                  </svg>
+                </div>
+                <h2 class="card-title">Base do sistema</h2>
+                <a href="#roadmap" class="card-action-link" data-navigate="roadmap">Roadmap →</a>
+              </div>
+              <div style="display: flex; flex-direction: column">
+                <div style="display: flex; align-items: center; gap: 12px; padding: 9px 2px; border-bottom: 1px solid var(--border-soft)">
+                  <span style="width: 22px; height: 22px; flex: 0 0 22px; border-radius: 6px; background: var(--raised); color: var(--text2); font-size: 12px; display: flex; align-items: center; justify-content: center">1</span>
+                  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                    <span style="font-weight: 500">Núcleo do agente</span>
+                    <span style="font-size: 12px; color: var(--text3)">Orquestração, ferramentas e prompts</span>
+                  </div>
+                  <span style="font-size: 12px; color: var(--accent); white-space: nowrap">Em andamento</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 9px 2px; border-bottom: 1px solid var(--border-soft)">
+                  <span style="width: 22px; height: 22px; flex: 0 0 22px; border-radius: 6px; background: var(--raised); color: var(--text2); font-size: 12px; display: flex; align-items: center; justify-content: center">2</span>
+                  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                    <span style="font-weight: 500">Memória e preferências</span>
+                    <span style="font-size: 12px; color: var(--text3)">Perfil, contexto e histórico</span>
+                  </div>
+                  <span style="font-size: 12px; color: var(--plan); white-space: nowrap">A fazer</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; padding: 9px 2px">
+                  <span style="width: 22px; height: 22px; flex: 0 0 22px; border-radius: 6px; background: var(--raised); color: var(--text2); font-size: 12px; display: flex; align-items: center; justify-content: center">3</span>
+                  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                    <span style="font-weight: 500">Agenda integrada</span>
+                    <span style="font-size: 12px; color: var(--text3)">Ler e agendar eventos</span>
+                  </div>
+                  <span style="font-size: 12px; color: var(--plan); white-space: nowrap">A fazer</span>
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </section>
+
+        <!-- ==========================================
+             PÁGINA: AGENDA
+             ========================================== -->
+        <section id="page-agenda" class="page-view">
+          <div class="page-header-row">
+            <div class="page-header">
+              <span class="header-date">Google Calendar · Sincronizado</span>
+              <h1 class="serif-title">Agenda</h1>
+              <p class="header-subtitle">Visualize seus compromissos, reuniões e blocos de foco organizados.</p>
+            </div>
+            <button class="btn-primary" type="button" data-toast="Criador de eventos rápido estará disponível em breve!">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Novo evento</span>
+            </button>
+          </div>
+
+          <!-- Filtros de Período -->
+          <div class="filter-tabs">
+            <button class="tab-btn active" type="button">Hoje (17 Out)</button>
+            <button class="tab-btn" type="button">Amanhã (18 Out)</button>
+            <button class="tab-btn" type="button">Esta semana</button>
+            <button class="tab-btn" type="button">Mês</button>
+          </div>
+
+          <!-- Linha do Tempo e Cards de Eventos -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px">
+            
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Manhã</h3>
+                <span class="card-badge">2 eventos</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <div class="event-row is-next" style="border: 1px solid var(--accent-soft)">
+                  <span class="event-time">10:30</span>
+                  <span class="event-dot active"></span>
+                  <div class="event-info">
+                    <span class="event-title">Revisão semanal</span>
+                    <span class="event-meta">Foco e Alinhamento · Google Meet</span>
+                  </div>
+                  <span class="badge-pill">Em 25 min</span>
+                </div>
+                <div class="event-row">
+                  <span class="event-time">12:30</span>
+                  <span class="event-dot"></span>
+                  <div class="event-info">
+                    <span class="event-title">Almoço com a família</span>
+                    <span class="event-meta">Restaurante Central · Presencial</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Tarde</h3>
+                <span class="card-badge">1 evento</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <div class="event-row">
+                  <span class="event-time">15:00</span>
+                  <span class="event-dot"></span>
+                  <div class="event-info">
+                    <span class="event-title">Sessão de estudo do projeto</span>
+                    <span class="event-meta">Em casa · Bloco de 2 horas</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Noite</h3>
+                <span class="card-badge">1 evento</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <div class="event-row">
+                  <span class="event-time">19:30</span>
+                  <span class="event-dot"></span>
+                  <div class="event-info">
+                    <span class="event-title">Academia & Treino</span>
+                    <span class="event-meta">SmartFit · Rotina diária</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Card de Integração Ativa -->
+          <div class="card" style="flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px">
+            <div style="display: flex; align-items: center; gap: 12px">
+              <div class="card-icon" style="color: var(--ok)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+              <div>
+                <div style="font-weight: 500">Conta Google conectada</div>
+                <div style="font-size: 12px; color: var(--text3)">Última sincronização feita há 2 minutos</div>
+              </div>
+            </div>
+            <button class="btn-secondary" type="button" data-toast="Agenda sincronizada com sucesso!">
+              Sincronizar agora
+            </button>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             PÁGINA: FINANÇAS
+             ========================================== -->
+        <section id="page-financas" class="page-view">
+          <div class="page-header-row">
+            <div class="page-header">
+              <span class="header-date">Outubro de 2026</span>
+              <h1 class="serif-title">Finanças</h1>
+              <p class="header-subtitle">Controle de orçamento mensal, divisão por categorias e extrato.</p>
+            </div>
+            <button class="btn-primary" type="button" data-toast="Lançamento manual de despesas estará disponível em breve!">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Registrar gasto</span>
+            </button>
+          </div>
+
+          <!-- Métricas Principais -->
+          <div class="cards-grid">
+            <div class="card">
+              <span style="font-size: 12px; color: var(--text3)">Total Gasto no Mês</span>
+              <div style="display: flex; align-items: baseline; gap: 8px">
+                <span class="serif-number">R$ 3.420,00</span>
+                <span style="font-size: 13px; color: var(--text2)">de R$ 5.000,00</span>
+              </div>
+              <div class="progress-track" style="margin-top: 4px">
+                <div class="progress-fill" style="width: 68%"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text2)">
+                <span>68% do teto</span>
+                <span>Restam R$ 1.580,00</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <span style="font-size: 12px; color: var(--text3)">Ritmo de Consumo</span>
+              <div style="display: flex; align-items: baseline; gap: 8px">
+                <span class="serif-number">R$ 201,17</span>
+                <span style="font-size: 13px; color: var(--text2)">/ dia em média</span>
+              </div>
+              <div style="margin-top: 8px; font-size: 12.5px; color: var(--ok); display: flex; align-items: center; gap: 6px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                <span>Dentro da meta prevista para o mês</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <span style="font-size: 12px; color: var(--text3)">Próxima Fatura</span>
+              <div style="display: flex; align-items: baseline; gap: 8px">
+                <span class="serif-number">R$ 1.840,50</span>
+                <span style="font-size: 13px; color: var(--warn)">Vence em 3 dias</span>
+              </div>
+              <div style="margin-top: 8px; font-size: 12.5px; color: var(--text2)">
+                Cartão Nubank Ultravioleta (Débito automático ativo)
+              </div>
+            </div>
+          </div>
+
+          <!-- Categorias e Extrato Recente -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px">
+            
+            <!-- Distribuição por Categorias -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Gastos por Categoria</h3>
+                <span class="card-badge">5 grupos</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 12px">
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
+                  <span style="width: 90px; color: var(--text2)">Moradia</span>
+                  <div style="flex: 1; height: 6px; border-radius: 999px; background: var(--track2); overflow: hidden">
+                    <div style="height: 100%; width: 100%; border-radius: 999px; background: var(--accent)"></div>
+                  </div>
+                  <span style="width: 90px; text-align: right; font-variant-numeric: tabular-nums">R$ 1.200,00</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
+                  <span style="width: 90px; color: var(--text2)">Mercado</span>
+                  <div style="flex: 1; height: 6px; border-radius: 999px; background: var(--track2); overflow: hidden">
+                    <div style="height: 100%; width: 65%; border-radius: 999px; background: var(--bar)"></div>
+                  </div>
+                  <span style="width: 90px; text-align: right; font-variant-numeric: tabular-nums">R$ 780,00</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
+                  <span style="width: 90px; color: var(--text2)">Lazer</span>
+                  <div style="flex: 1; height: 6px; border-radius: 999px; background: var(--track2); overflow: hidden">
+                    <div style="height: 100%; width: 44%; border-radius: 999px; background: var(--bar)"></div>
+                  </div>
+                  <span style="width: 90px; text-align: right; font-variant-numeric: tabular-nums">R$ 530,00</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
+                  <span style="width: 90px; color: var(--text2)">Transporte</span>
+                  <div style="flex: 1; height: 6px; border-radius: 999px; background: var(--track2); overflow: hidden">
+                    <div style="height: 100%; width: 34%; border-radius: 999px; background: var(--bar)"></div>
+                  </div>
+                  <span style="width: 90px; text-align: right; font-variant-numeric: tabular-nums">R$ 410,00</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
+                  <span style="width: 90px; color: var(--text2)">Outros</span>
+                  <div style="flex: 1; height: 6px; border-radius: 999px; background: var(--track2); overflow: hidden">
+                    <div style="height: 100%; width: 41%; border-radius: 999px; background: var(--bar)"></div>
+                  </div>
+                  <span style="width: 90px; text-align: right; font-variant-numeric: tabular-nums">R$ 500,00</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Últimas Transações -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Últimas Transações</h3>
+                <span class="card-badge">Exemplo</span>
+              </div>
+              <div style="display: flex; flex-direction: column">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-soft)">
+                  <div>
+                    <div style="font-weight: 500">Supermercado Pão de Açúcar</div>
+                    <div style="font-size: 12px; color: var(--text3)">Hoje · Mercado</div>
+                  </div>
+                  <span style="font-weight: 500; font-variant-numeric: tabular-nums">- R$ 142,80</span>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-soft)">
+                  <div>
+                    <div style="font-weight: 500">Uber Viagens</div>
+                    <div style="font-size: 12px; color: var(--text3)">Ontem · Transporte</div>
+                  </div>
+                  <span style="font-weight: 500; font-variant-numeric: tabular-nums">- R$ 28,40</span>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-soft)">
+                  <div>
+                    <div style="font-weight: 500">Assinatura Spotify & Netflix</div>
+                    <div style="font-size: 12px; color: var(--text3)">14 Out · Lazer</div>
+                  </div>
+                  <span style="font-weight: 500; font-variant-numeric: tabular-nums">- R$ 59,80</span>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0">
+                  <div>
+                    <div style="font-weight: 500">Transferência Recebida</div>
+                    <div style="font-size: 12px; color: var(--text3)">10 Out · Proventos</div>
+                  </div>
+                  <span style="font-weight: 500; color: var(--ok); font-variant-numeric: tabular-nums">+ R$ 1.500,00</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ==========================================
+             PÁGINA: CASA E ALEXA
+             ========================================== -->
+        <section id="page-casa" class="page-view">
+          <div class="page-header-row">
+            <div class="page-header">
+              <span class="header-date">Smart Home & Automação IoT</span>
+              <h1 class="serif-title">Casa e Alexa</h1>
+              <p class="header-subtitle">Controle de dispositivos conectados, cômodos e rotinas inteligentes por voz.</p>
+            </div>
+            <button class="btn-primary" type="button" data-toast="Buscando novos dispositivos na rede local...">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+              </svg>
+              <span>Buscar dispositivos</span>
+            </button>
+          </div>
+
+          <!-- Filtro por Cômodos -->
+          <div class="filter-tabs">
+            <button class="tab-btn active" type="button" data-room-filter="todos">Todos os cômodos</button>
+            <button class="tab-btn" type="button" data-room-filter="Sala de Estar">Sala de Estar</button>
+            <button class="tab-btn" type="button" data-room-filter="Quarto">Quarto</button>
+            <button class="tab-btn" type="button" data-room-filter="Cozinha">Cozinha</button>
+            <button class="tab-btn" type="button" data-room-filter="Escritório">Escritório</button>
+          </div>
+
+          <!-- Rotinas Automatizadas -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path>
+                </svg>
+              </div>
+              <h3 class="card-title">Rotinas Rápidas da Alexa</h3>
+              <span class="card-badge">Clique para acionar</span>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px">
+              <button class="chip" type="button" data-routine="Bom dia" style="padding: 8px 16px; font-weight: 500">
+                ☀️ Rotina: Bom dia
+              </button>
+              <button class="chip" type="button" data-routine="Foco Total" style="padding: 8px 16px; font-weight: 500">
+                🎯 Rotina: Modo Foco
+              </button>
+              <button class="chip" type="button" data-routine="Cinema" style="padding: 8px 16px; font-weight: 500">
+                🍿 Rotina: Cinema em Casa
+              </button>
+              <button class="chip" type="button" data-routine="Saindo de casa" style="padding: 8px 16px; font-weight: 500">
+                🚗 Rotina: Saindo de casa
+              </button>
+              <button class="chip" type="button" data-routine="Boa noite" style="padding: 8px 16px; font-weight: 500">
+                🌙 Rotina: Boa noite
+              </button>
+            </div>
+          </div>
+
+          <!-- Grid de Dispositivos Conectados -->
+          <div id="devices-full-grid" class="cards-grid">
+            <!-- Preenchido dinamicamente via app.js -->
+          </div>
+        </section>
+
+        <!-- ==========================================
+             PÁGINA: TAREFAS
+             ========================================== -->
+        <section id="page-tarefas" class="page-view">
+          <div class="page-header-row">
+            <div class="page-header">
+              <span class="header-date">Produtividade & Organização</span>
+              <h1 class="serif-title">Tarefas</h1>
+              <p class="header-subtitle">Gerencie suas pendências, prioridades e metas com acompanhamento proativo.</p>
+            </div>
+          </div>
+
+          <!-- Input Rápido para Criar Tarefa -->
+          <form id="add-task-form" class="prompt-card" style="padding: 12px 16px">
+            <div class="prompt-input-row">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent)" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <input id="add-task-input" class="prompt-input" type="text" placeholder="Adicionar nova tarefa… (Pressione Enter)">
+              <button type="submit" class="btn-primary" style="padding: 6px 14px">Adicionar</button>
+            </div>
+          </form>
+
+          <!-- Filtros de Tarefas -->
+          <div class="filter-tabs">
+            <button class="tab-btn active" type="button" data-task-filter="todas">Todas</button>
+            <button class="tab-btn" type="button" data-task-filter="pendentes">Pendentes</button>
+            <button class="tab-btn" type="button" data-task-filter="concluidas">Concluídas</button>
+            <button class="tab-btn" type="button" data-task-filter="prioritarias">Prioritárias</button>
+          </div>
+
+          <!-- Lista Completa de Tarefas -->
+          <div id="tasks-full-list" style="display: flex; flex-direction: column; gap: 8px">
+            <!-- Preenchido dinamicamente via app.js -->
+          </div>
+        </section>
+
+        <!-- ==========================================
+             PÁGINA: INTEGRAÇÕES
+             ========================================== -->
+        <section id="page-integracoes" class="page-view">
+          <div class="page-header-row">
+            <div class="page-header">
+              <span class="header-date">Ecossistema & Conexões</span>
+              <h1 class="serif-title">Integrações</h1>
+              <p class="header-subtitle">Conecte seus aplicativos externos para permitir automações completas no Rian Coworker.</p>
+            </div>
+          </div>
+
+          <div class="cards-grid">
+            
+            <div class="card">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+                <div style="display: flex; gap: 12px; align-items: center">
+                  <div class="card-icon" style="background: rgba(111, 191, 143, 0.15); color: var(--ok)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
+                  </div>
+                  <div>
+                    <h3 style="font-weight: 600; font-size: 15px">Google Calendar</h3>
+                    <span style="font-size: 12px; color: var(--text3)">Agenda pessoal e trabalho</span>
+                  </div>
+                </div>
+                <span class="badge-pill" style="color: var(--ok)">Conectado</span>
+              </div>
+              <p style="font-size: 13px; color: var(--text2); margin-top: 4px">Permite ao assistente consultar compromissos, alertar sobre conflitos e agendar tarefas automaticamente.</p>
+              <div style="margin-top: auto; display: flex; justify-content: flex-end">
+                <button class="btn-secondary" type="button" data-toast="Configurações do Google Calendar abertas.">Configurar</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+                <div style="display: flex; gap: 12px; align-items: center">
+                  <div class="card-icon" style="background: rgba(224, 164, 90, 0.15); color: var(--warn)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg>
+                  </div>
+                  <div>
+                    <h3 style="font-weight: 600; font-size: 15px">Amazon Alexa</h3>
+                    <span style="font-size: 12px; color: var(--text3)">Dispositivos Echo e Skill</span>
+                  </div>
+                </div>
+                <span class="badge-pill" style="color: var(--warn)">Pendente</span>
+              </div>
+              <p style="font-size: 13px; color: var(--text2); margin-top: 4px">Comandos de voz no dia a dia, disparos de rotinas matinais e controle de lâmpadas/tomadas inteligentes.</p>
+              <div style="margin-top: auto; display: flex; justify-content: flex-end">
+                <button class="btn-primary" type="button" data-toast="Iniciando fluxo de autenticação com Amazon Alexa...">Conectar</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+                <div style="display: flex; gap: 12px; align-items: center">
+                  <div class="card-icon" style="background: rgba(224, 164, 90, 0.15); color: var(--warn)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"></path></svg>
+                  </div>
+                  <div>
+                    <h3 style="font-weight: 600; font-size: 15px">Open Finance Brasil</h3>
+                    <span style="font-size: 12px; color: var(--text3)">Bancos e cartões</span>
+                  </div>
+                </div>
+                <span class="badge-pill" style="color: var(--warn)">Pendente</span>
+              </div>
+              <p style="font-size: 13px; color: var(--text2); margin-top: 4px">Importação automática e segura de extratos bancários, categorização com IA e alertas de faturas a vencer.</p>
+              <div style="margin-top: auto; display: flex; justify-content: flex-end">
+                <button class="btn-primary" type="button" data-toast="Conexão com Open Finance pronta para ser configurada!">Conectar</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+                <div style="display: flex; gap: 12px; align-items: center">
+                  <div class="card-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                  </div>
+                  <div>
+                    <h3 style="font-weight: 600; font-size: 15px">WhatsApp / Telegram</h3>
+                    <span style="font-size: 12px; color: var(--text3)">Canal de mensagens</span>
+                  </div>
+                </div>
+                <span class="badge-pill">Planejado</span>
+              </div>
+              <p style="font-size: 13px; color: var(--text2); margin-top: 4px">Permite conversar com o Rian Coworker via mensageiro instantâneo e receber resumos diários no celular.</p>
+              <div style="margin-top: auto; display: flex; justify-content: flex-end">
+                <button class="btn-secondary" type="button" disabled style="opacity: 0.6">Em breve</button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ==========================================
+             PÁGINA: BASE DO SISTEMA (ROADMAP & AGENTE)
+             ========================================== -->
+        <section id="page-roadmap" class="page-view">
+          <div class="page-header-row">
+            <div class="page-header">
+              <span class="header-date">Arquitetura & Engenharia</span>
+              <h1 class="serif-title">Base do sistema</h1>
+              <p class="header-subtitle">Estrutura técnica, métricas do agente inteligente e roadmap de desenvolvimento.</p>
+            </div>
+          </div>
+
+          <!-- Métricas de Operação do Agente -->
+          <div class="cards-grid">
+            <div class="card">
+              <span style="font-size: 12px; color: var(--text3)">Modelo LLM Principal</span>
+              <div class="serif-number" style="font-size: 26px">Claude 3.7 / Gemini</div>
+              <span style="font-size: 12.5px; color: var(--ok)">● Orquestrador ativo</span>
+            </div>
+            <div class="card">
+              <span style="font-size: 12px; color: var(--text3)">Memória e Contexto (RAG)</span>
+              <div class="serif-number" style="font-size: 26px">1.240 Nós</div>
+              <span style="font-size: 12.5px; color: var(--text2)">Vetores indexados</span>
+            </div>
+            <div class="card">
+              <span style="font-size: 12px; color: var(--text3)">Tempo de Resposta Médio</span>
+              <div class="serif-number" style="font-size: 26px">340 ms</div>
+              <span style="font-size: 12.5px; color: var(--ok)">Baixa latência</span>
+            </div>
+          </div>
+
+          <!-- Roadmap Detalhado -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Fases do Roadmap</h3>
+              <span class="card-badge">Versão 0.1</span>
+            </div>
+            <div style="display: flex; flex-direction: column">
+              <div style="display: flex; align-items: center; gap: 14px; padding: 12px 2px; border-bottom: 1px solid var(--border-soft)">
+                <span style="width: 24px; height: 24px; border-radius: 6px; background: var(--accent); color: var(--on-accent); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center">1</span>
+                <div style="flex: 1">
+                  <div style="font-weight: 600">Núcleo do agente</div>
+                  <div style="font-size: 12px; color: var(--text3)">Orquestração, loop de execução, ferramentas de sistema e prompts base</div>
+                </div>
+                <span style="font-size: 12px; color: var(--accent); font-weight: 500">Em andamento</span>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 14px; padding: 12px 2px; border-bottom: 1px solid var(--border-soft)">
+                <span style="width: 24px; height: 24px; border-radius: 6px; background: var(--raised); color: var(--text2); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center">2</span>
+                <div style="flex: 1">
+                  <div style="font-weight: 600">Memória e preferências</div>
+                  <div style="font-size: 12px; color: var(--text3)">Perfil do usuário, armazenamento persistente SQLite/Vetorial e histórico contínuo</div>
+                </div>
+                <span style="font-size: 12px; color: var(--plan)">A fazer</span>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 14px; padding: 12px 2px; border-bottom: 1px solid var(--border-soft)">
+                <span style="width: 24px; height: 24px; border-radius: 6px; background: var(--raised); color: var(--text2); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center">3</span>
+                <div style="flex: 1">
+                  <div style="font-weight: 600">Agenda & Calendário</div>
+                  <div style="font-size: 12px; color: var(--text3)">Leitura bidirecional, criação de eventos inteligentes e alertas de conflito</div>
+                </div>
+                <span style="font-size: 12px; color: var(--plan)">A fazer</span>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 14px; padding: 12px 2px; border-bottom: 1px solid var(--border-soft)">
+                <span style="width: 24px; height: 24px; border-radius: 6px; background: var(--raised); color: var(--text2); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center">4</span>
+                <div style="flex: 1">
+                  <div style="font-weight: 600">Alexa & Automação Doméstica</div>
+                  <div style="font-size: 12px; color: var(--text3)">Skill personalizada com intents customizadas e controle unificado de dispositivos</div>
+                </div>
+                <span style="font-size: 12px; color: var(--plan)">A fazer</span>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 14px; padding: 12px 2px; border-bottom: 1px solid var(--border-soft)">
+                <span style="width: 24px; height: 24px; border-radius: 6px; background: var(--raised); color: var(--text2); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center">5</span>
+                <div style="flex: 1">
+                  <div style="font-weight: 600">Módulo Financeiro</div>
+                  <div style="font-size: 12px; color: var(--text3)">Importação de extratos OFX/Open Finance, categorização automática e projeções</div>
+                </div>
+                <span style="font-size: 12px; color: var(--plan)">A fazer</span>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 14px; padding: 12px 2px">
+                <span style="width: 24px; height: 24px; border-radius: 6px; background: var(--raised); color: var(--text2); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center">6</span>
+                <div style="flex: 1">
+                  <div style="font-weight: 600">Rotinas Proativas</div>
+                  <div style="font-size: 12px; color: var(--text3)">Briefing matinal de voz, detecção de padrões e sugestões preditivas diárias</div>
+                </div>
+                <span style="font-size: 12px; color: var(--plan)">A fazer</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             PÁGINA: CONFIGURAÇÕES
+             ========================================== -->
+        <section id="page-configuracoes" class="page-view">
+          <div class="page-header-row">
+            <div class="page-header">
+              <span class="header-date">Preferências Globais</span>
+              <h1 class="serif-title">Configurações</h1>
+              <p class="header-subtitle">Ajuste o comportamento do Rian Coworker, credenciais e parâmetros do sistema.</p>
+            </div>
+          </div>
+
+          <form id="settings-form" style="display: flex; flex-direction: column; gap: 20px; max-width: 760px">
+            
+            <!-- Card Perfil do Assistente -->
+            <div class="card">
+              <h3 class="card-title">Perfil do Assistente</h3>
+              <div class="form-group">
+                <label class="form-label" for="assistant-name">Nome de Exibição</label>
+                <input id="assistant-name" class="form-control" type="text" value="Rian Coworker">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="assistant-tone">Tom de Comunicação</label>
+                <select id="assistant-tone" class="form-control">
+                  <option value="conciso" selected>Conciso e direto (Recomendado para produtividade)</option>
+                  <option value="detalhado">Analítico e detalhado</option>
+                  <option value="amigavel">Amigável e descontraído</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Card Modelos de Inteligência Artificial -->
+            <div class="card">
+              <h3 class="card-title">Inteligência Artificial & Modelos</h3>
+              <div class="form-group">
+                <label class="form-label" for="model-provider">Provedor Principal</label>
+                <select id="model-provider" class="form-control">
+                  <option value="claude">Anthropic (Claude 3.7 Sonnet)</option>
+                  <option value="gemini" selected>Google Gemini (Gemini 2.5 Pro / Flash)</option>
+                  <option value="openai">OpenAI (GPT-4o)</option>
+                  <option value="local">Ollama / Modelo Local (Offline)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="api-key-input">Chave de API (Mock)</label>
+                <input id="api-key-input" class="form-control" type="password" value="sk-ant-api03-example-key-dummy">
+              </div>
+            </div>
+
+            <!-- Card Notificações & Privacidade -->
+            <div class="card">
+              <h3 class="card-title">Privacidade & Resumo Diário</h3>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0">
+                <div>
+                  <div style="font-weight: 500">Briefing Matinal Automático</div>
+                  <div style="font-size: 12px; color: var(--text3)">Receber resumo diário às 08:00 com agenda e tarefas</div>
+                </div>
+                <button type="button" class="switch-btn" aria-pressed="true">
+                  <span class="switch-knob"></span>
+                </button>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-top: 1px solid var(--border-soft)">
+                <div>
+                  <div style="font-weight: 500">Histórico de Conversas Local</div>
+                  <div style="font-size: 12px; color: var(--text3)">Armazenar memória apenas no dispositivo</div>
+                </div>
+                <button type="button" class="switch-btn" aria-pressed="true">
+                  <span class="switch-knob"></span>
+                </button>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 12px">
+              <button class="btn-secondary" type="reset">Restaurar padrões</button>
+              <button class="btn-primary" type="submit">Salvar alterações</button>
+            </div>
+          </form>
+        </section>
+
+      </main>
+    </div>
+
+  </div>
+
+  <!-- Container de Toasts para feedback visual instantâneo -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Script Principal da Aplicação -->
+  <script src="./app.js"></script>
+</body>
+</html>
