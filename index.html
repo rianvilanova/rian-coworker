@@ -445,24 +445,32 @@
         <section id="page-agenda" class="page-view">
           <div class="page-header-row">
             <div class="page-header">
-              <span class="header-date">Google Calendar · Sincronizado</span>
+              <span id="calendar-header-status" class="header-date">Google Calendar · Verificando sincronização...</span>
               <h1 class="serif-title">Agenda</h1>
-              <p class="header-subtitle">Visualize seus compromissos, reuniões e blocos de foco organizados.</p>
+              <p class="header-subtitle">Visualize seus compromissos, reuniões e blocos de foco sincronizados com sua conta Google.</p>
             </div>
-            <button class="btn-primary" type="button" data-toast="Criador de eventos rápido estará disponível em breve!">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-              <span>Novo evento</span>
-            </button>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap">
+              <button id="btn-quick-add-event" class="btn-secondary" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span>Adição Rápida</span>
+              </button>
+              <button id="btn-open-new-event" class="btn-primary" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Novo evento</span>
+              </button>
+            </div>
           </div>
 
           <!-- Filtros de Período -->
           <div class="filter-tabs">
-            <button class="tab-btn active" type="button">Hoje (17 Out)</button>
-            <button class="tab-btn" type="button">Amanhã (18 Out)</button>
-            <button class="tab-btn" type="button">Esta semana</button>
-            <button class="tab-btn" type="button">Mês</button>
+            <button class="tab-btn active" type="button" data-calendar-filter="hoje">Hoje</button>
+            <button class="tab-btn" type="button" data-calendar-filter="amanha">Amanhã</button>
+            <button class="tab-btn" type="button" data-calendar-filter="semana">Esta semana</button>
+            <button class="tab-btn" type="button" data-calendar-filter="todos">Todos</button>
           </div>
 
           <!-- Linha do Tempo e Cards de Eventos -->
@@ -471,81 +479,59 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Manhã</h3>
-                <span class="card-badge">2 eventos</span>
+                <span id="badge-morning-count" class="card-badge">Carregando...</span>
               </div>
-              <div style="display: flex; flex-direction: column; gap: 8px">
-                <div class="event-row is-next" style="border: 1px solid var(--accent-soft)">
-                  <span class="event-time">10:30</span>
-                  <span class="event-dot active"></span>
-                  <div class="event-info">
-                    <span class="event-title">Revisão semanal</span>
-                    <span class="event-meta">Foco e Alinhamento · Google Meet</span>
-                  </div>
-                  <span class="badge-pill">Em 25 min</span>
-                </div>
-                <div class="event-row">
-                  <span class="event-time">12:30</span>
-                  <span class="event-dot"></span>
-                  <div class="event-info">
-                    <span class="event-title">Almoço com a família</span>
-                    <span class="event-meta">Restaurante Central · Presencial</span>
-                  </div>
-                </div>
+              <div id="agenda-morning-events" style="display: flex; flex-direction: column; gap: 8px">
+                <!-- Preenchido via app.js -->
               </div>
             </div>
 
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Tarde</h3>
-                <span class="card-badge">1 evento</span>
+                <span id="badge-afternoon-count" class="card-badge">Carregando...</span>
               </div>
-              <div style="display: flex; flex-direction: column; gap: 8px">
-                <div class="event-row">
-                  <span class="event-time">15:00</span>
-                  <span class="event-dot"></span>
-                  <div class="event-info">
-                    <span class="event-title">Sessão de estudo do projeto</span>
-                    <span class="event-meta">Em casa · Bloco de 2 horas</span>
-                  </div>
-                </div>
+              <div id="agenda-afternoon-events" style="display: flex; flex-direction: column; gap: 8px">
+                <!-- Preenchido via app.js -->
               </div>
             </div>
 
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Noite</h3>
-                <span class="card-badge">1 evento</span>
+                <span id="badge-evening-count" class="card-badge">Carregando...</span>
               </div>
-              <div style="display: flex; flex-direction: column; gap: 8px">
-                <div class="event-row">
-                  <span class="event-time">19:30</span>
-                  <span class="event-dot"></span>
-                  <div class="event-info">
-                    <span class="event-title">Academia & Treino</span>
-                    <span class="event-meta">SmartFit · Rotina diária</span>
-                  </div>
-                </div>
+              <div id="agenda-evening-events" style="display: flex; flex-direction: column; gap: 8px">
+                <!-- Preenchido via app.js -->
               </div>
             </div>
 
           </div>
 
-          <!-- Card de Integração Ativa -->
+          <!-- Card de Integração Ativa com Google Calendar -->
           <div class="card" style="flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px">
             <div style="display: flex; align-items: center; gap: 12px">
-              <div class="card-icon" style="color: var(--ok)">
+              <div id="calendar-status-icon" class="card-icon" style="color: var(--ok)">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>
                 </svg>
               </div>
               <div>
-                <div style="font-weight: 500">Conta Google conectada</div>
-                <div style="font-size: 12px; color: var(--text3)">Última sincronização feita há 2 minutos</div>
+                <div id="calendar-status-text" style="font-weight: 500">Google Calendar</div>
+                <div id="calendar-sync-time" style="font-size: 12px; color: var(--text3)">Pronto para sincronização</div>
               </div>
             </div>
-            <button class="btn-secondary" type="button" data-toast="Agenda sincronizada com sucesso!">
-              Sincronizar agora
-            </button>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+              <button id="btn-open-calendar-settings" class="btn-secondary" type="button">
+                Configurar / Conta
+              </button>
+              <button id="btn-sync-calendar" class="btn-primary" type="button">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                </svg>
+                <span>Sincronizar agora</span>
+              </button>
+            </div>
           </div>
         </section>
 
@@ -822,11 +808,12 @@
                     <span style="font-size: 12px; color: var(--text3)">Agenda pessoal e trabalho</span>
                   </div>
                 </div>
-                <span class="badge-pill" style="color: var(--ok)">Conectado</span>
+                <span id="badge-calendar-integration" class="badge-pill" style="color: var(--ok)">Verificando...</span>
               </div>
-              <p style="font-size: 13px; color: var(--text2); margin-top: 4px">Permite ao assistente consultar compromissos, alertar sobre conflitos e agendar tarefas automaticamente.</p>
-              <div style="margin-top: auto; display: flex; justify-content: flex-end">
-                <button class="btn-secondary" type="button" data-toast="Configurações do Google Calendar abertas.">Configurar</button>
+              <p style="font-size: 13px; color: var(--text2); margin-top: 4px">Permite ao assistente consultar compromissos, alertar sobre conflitos e agendar tarefas diretamente no Google Calendar oficial.</p>
+              <div style="margin-top: auto; display: flex; justify-content: flex-end; gap: 8px">
+                <button id="btn-config-calendar-integration" class="btn-secondary" type="button">Configurar API</button>
+                <button id="btn-auth-calendar-integration" class="btn-primary" type="button">Conectar com Google</button>
               </div>
             </div>
 
@@ -1067,6 +1054,178 @@
       </main>
     </div>
 
+  </div>
+
+  <!-- ==========================================
+       MODAIS DE INTEGRAÇÃO COM GOOGLE CALENDAR
+       ========================================== -->
+
+  <!-- Modal 1: Novo Evento -->
+  <div id="modal-new-event" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent)">
+            <rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path>
+          </svg>
+          <span>Novo Evento no Google Calendar</span>
+        </h3>
+        <button type="button" class="modal-close-btn" data-close-modal="modal-new-event" aria-label="Fechar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <form id="form-new-event">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="event-title">Título do Evento *</label>
+            <input id="event-title" class="form-control" type="text" placeholder="Ex: Reunião de Planejamento" required>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+            <div class="form-group">
+              <label class="form-label" for="event-start">Início *</label>
+              <input id="event-start" class="form-control" type="datetime-local" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="event-end">Término *</label>
+              <input id="event-end" class="form-control" type="datetime-local" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="event-location">Local / Sala</label>
+            <input id="event-location" class="form-control" type="text" placeholder="Ex: Escritório ou Link externo">
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px; padding: 4px 0">
+            <input id="event-meet" type="checkbox" style="width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer">
+            <label for="event-meet" style="font-size: 13.5px; cursor: pointer; user-select: none">
+              Adicionar link de videoconferência do <strong>Google Meet</strong>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="event-description">Descrição / Notas</label>
+            <textarea id="event-description" class="form-control" rows="3" placeholder="Pautas, anotações e detalhes do compromisso..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-close-modal="modal-new-event">Cancelar</button>
+          <button type="submit" class="btn-primary" id="btn-submit-new-event">Criar Evento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Adição Rápida (Linguagem Natural) -->
+  <div id="modal-quick-add" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent)">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span>Adição Rápida de Compromisso</span>
+        </h3>
+        <button type="button" class="modal-close-btn" data-close-modal="modal-quick-add" aria-label="Fechar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <form id="form-quick-add-event">
+        <div class="modal-body">
+          <p style="font-size: 13px; color: var(--text2)">
+            Digite o compromisso em linguagem natural. A API do Google Calendar ou o assistente entenderá data, horário e título automaticamente:
+          </p>
+          <div class="form-group">
+            <input id="quick-add-text" class="form-control" type="text" placeholder="Ex: Almoço com Rian amanhã às 12h30 no restaurante" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-close-modal="modal-quick-add">Cancelar</button>
+          <button type="submit" class="btn-primary">Agendar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Configurações & OAuth do Google Calendar -->
+  <div id="modal-google-calendar" class="modal-backdrop">
+    <div class="modal-box" style="max-width: 560px">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--ok)">
+            <rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path>
+          </svg>
+          <span>Integração Google Calendar API</span>
+        </h3>
+        <button type="button" class="modal-close-btn" data-close-modal="modal-google-calendar" aria-label="Fechar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Status Atual -->
+        <div class="card" style="padding: 14px; gap: 8px; background: var(--raised)">
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <span style="font-size: 12px; color: var(--text3)">Status da Integração</span>
+            <span id="modal-cal-status-badge" class="badge-pill" style="color: var(--ok)">Verificando...</span>
+          </div>
+          <div id="modal-cal-account-info" style="font-weight: 500; font-size: 14.5px">
+            Verificando conexão...
+          </div>
+          <div id="modal-cal-details" style="font-size: 12px; color: var(--text3)">
+            Conecte sua conta Google para ler e gravar eventos na sua agenda oficial.
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 6px">
+            <button id="modal-btn-connect-google" class="btn-primary" type="button" style="padding: 6px 14px; font-size: 12.5px">
+              Conectar com Google
+            </button>
+            <button id="modal-btn-disconnect-google" class="btn-secondary" type="button" style="padding: 6px 14px; font-size: 12.5px; display: none">
+              Desconectar
+            </button>
+          </div>
+        </div>
+
+        <!-- Formulário de Credenciais OAuth 2.0 -->
+        <form id="form-google-credentials" style="display: flex; flex-direction: column; gap: 14px">
+          <div style="font-weight: 600; font-size: 13.5px; color: var(--text)">
+            Credenciais do Google Cloud Console
+          </div>
+          <p style="font-size: 12px; color: var(--text3); margin: 0">
+            Você precisa de um <strong>Client ID</strong> e <strong>Client Secret</strong> de um projeto com a Google Calendar API ativada.
+          </p>
+
+          <div class="form-group">
+            <label class="form-label" for="google-client-id">Google Client ID</label>
+            <input id="google-client-id" class="form-control" type="text" placeholder="Ex: 123456789-abcdef.apps.googleusercontent.com">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="google-client-secret">Google Client Secret</label>
+            <input id="google-client-secret" class="form-control" type="password" placeholder="Ex: GOCSPX-xxxxxxxxxxxxxxxxxxxx">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="google-redirect-uri">URI de Redirecionamento Autorizado</label>
+            <input id="google-redirect-uri" class="form-control" type="text" value="http://localhost:3001/api/calendar/callback" readonly style="opacity: 0.8; cursor: not-allowed">
+            <span style="font-size: 11px; color: var(--text3)">Adicione exatamente este endereço no Google Cloud Console.</span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px">
+            <a href="./integrations/google-calendar/COMO-CONFIGURAR-GOOGLE-CALENDAR.md" target="_blank" style="font-size: 12px; color: var(--accent); text-decoration: underline">
+              Ver guia passo a passo ↗
+            </a>
+            <button type="submit" class="btn-secondary" style="padding: 6px 14px">
+              Salvar Credenciais
+            </button>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" data-close-modal="modal-google-calendar">Fechar</button>
+      </div>
+    </div>
   </div>
 
   <!-- Container de Toasts para feedback visual instantâneo -->

@@ -90,14 +90,12 @@ O objetivo do projeto é conectar os diferentes pilares da vida diária (comprom
   - [x] Sistema de design com modo escuro e claro persistente
   - [x] Navegação SPA fluida entre todas as 8 páginas/módulos
   - [x] Interatividades visuais funcionais (tarefas, interruptores, feedback toast)
-- [ ] **Fase 2: Núcleo do Agente & Memória**
-  - [ ] Implementação da API backend com servidor FastAPI
-  - [ ] Conexão com LLMs via provedores oficiais
-  - [ ] Sistema de memória persistente e perfil do usuário
-- [ ] **Fase 3: Automação de Agenda & Tarefas**
-  - [ ] Autenticação OAuth2 com Google Calendar
-  - [ ] Criação e edição de eventos diretamente pelo prompt do assistente
-  - [ ] Persistência de tarefas em banco de dados
+- [x] **Fase 2 & 3: Mecanismo de Integração com Google Calendar API**
+  - [x] Autenticação segura OAuth 2.0 com renovação automática por Refresh Token
+  - [x] Endpoints REST locais (`/api/calendar/events`, `/api/calendar/auth`, `/api/calendar/status`, etc.)
+  - [x] Sincronização em tempo real da agenda do usuário com o dashboard
+  - [x] Modais interativos para criação de eventos com Google Meet e adição rápida em linguagem natural
+  - [x] Exclusão e filtros de compromissos por período (Hoje, Amanhã, Semana)
 - [ ] **Fase 4: Integração de Casa Inteligente (Alexa)**
   - [ ] Desenvolvimento da Skill Alexa personalizada
   - [ ] Webhook para sincronizar estado de lâmpadas e rotinas
@@ -110,15 +108,45 @@ O objetivo do projeto é conectar os diferentes pilares da vida diária (comprom
 
 ---
 
-## 💻 Como Visualizar a Interface Atual
+## 📅 Como Usar a Integração com o Google Calendar
 
-A interface já está pronta para navegação local imediata:
+O assistente possui um gateway completo para comunicação bidirecional com a API do Google Calendar.
 
-1. Acesse a pasta do projeto e dê um duplo clique no arquivo [`index.html`](file:///C:/Users/vilanova/Desktop/workspace/rian-coworker/index.html) para abrir diretamente no navegador.
-2. Ou inicie um servidor local se preferir:
-   ```bash
-   npx serve .
-   ```
-3. Navegue livremente pela barra lateral entre as seções **Início**, **Agenda**, **Finanças**, **Casa e Alexa**, **Tarefas**, **Integrações**, **Base do sistema** e **Configurações**.
+### 1. Iniciar o Servidor Integrado
+No terminal da pasta do projeto, execute:
+```bash
+node server.js
+```
+O servidor iniciará em `http://localhost:3001` servindo tanto o frontend quanto os endpoints da API.
+
+### 2. Conectar sua Conta Google
+1. Abra `http://localhost:3001` no navegador.
+2. Na página **Agenda** ou **Integrações**, clique em **"Configurar / Conta"**.
+3. Siga o guia passo a passo em [`COMO-CONFIGURAR-GOOGLE-CALENDAR.md`](file:///C:/Users/vilanova/Desktop/workspace/rian-coworker/integrations/google-calendar/COMO-CONFIGURAR-GOOGLE-CALENDAR.md) para obter seu **Client ID** e **Client Secret** gratuitos no Google Cloud Console.
+4. Salve as credenciais e clique em **"Conectar com Google"**.
+5. Autorize o acesso à sua conta. A aplicação redirecionará de volta para o Rian Coworker com a agenda sincronizada!
+
+### 3. Criar e Gerenciar Eventos
+- **Novo Evento**: Clique no botão "+ Novo evento" para agendar com data, hora, local e geração automática de link para videoconferência no **Google Meet**.
+- **Adição Rápida**: Clique em "Adição Rápida" para digitar comandos como *"Almoço com time amanhã às 12h30"* e deixar o Google entender os horários.
+- **Sincronização em Tempo Real**: Clique em "Sincronizar agora" para atualizar os compromissos em tempo real.
+- **Modo Offline / Demonstração**: Caso o servidor ou credenciais ainda não tenham sido configurados, a interface opera perfeitamente com dados de demonstração interativos.
 
 ---
+
+## 📂 Estrutura de Arquivos
+
+```
+rian-coworker/
+├── index.html                   # Interface SPA completa e navegável
+├── style.css                    # Folha de estilo e design system
+├── app.js                       # Lógica da aplicação, navegação e cliente da Google Calendar API
+├── server.js                    # Servidor local Node.js e API Gateway (/api/calendar/*)
+├── integrations/
+│   └── google-calendar/
+│       ├── google-calendar-service.js          # Serviço OAuth 2.0 e cliente da API Google Calendar
+│       ├── config.json                         # Credenciais (Client ID, Client Secret)
+│       └── COMO-CONFIGURAR-GOOGLE-CALENDAR.md  # Tutorial passo a passo do Google Cloud Console
+└── README.md                    # Documentação geral do projeto
+```
+

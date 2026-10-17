@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Assistente Pessoal</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&amp;display=swap">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+.root{
+  --bg:#191919;--side:#202020;--card:#1e1e1e;--border:#2c2c2c;--border-soft:#262626;
+  --hover:#262626;--raised:#2a2a2a;--line:#333333;
+  --text:#ececec;--text2:#a3a3a3;--text3:#8a8a8a;--faint:#5c5c5c;--check:#6a6a6a;
+  --track:#2a2a2a;--track2:#262626;--bar:#5a5a5a;--dot-idle:#4a4a4a;
+  --toggle-off:#3a3a3a;--knob-off:#bdbdbd;--knob-on:#191919;
+  --accent:#6EA1FF;--accent-soft:rgba(110,161,255,0.14);--on-accent:#191919;
+  --ok:#6fbf8f;--warn:#e0a45a;--plan:#9a9a9a;--icon:#cfcfcf;
+}
+.root[data-theme="light"]{
+  --bg:#ffffff;--side:#f7f7f5;--card:#ffffff;--border:#e9e9e7;--border-soft:#efefed;
+  --hover:#efefed;--raised:#efefed;--line:#dcdcd9;
+  --text:#37352f;--text2:#6b6a66;--text3:#73726e;--faint:#b8b7b3;--check:#8f8e8a;
+  --track:#ebebea;--track2:#efefed;--bar:#c9c8c4;--dot-idle:#c4c3bf;
+  --toggle-off:#d3d2ce;--knob-off:#ffffff;--knob-on:#ffffff;
+  --accent:#2F6FDB;--accent-soft:#E8F0FD;--on-accent:#ffffff;
+  --ok:#1a7f4b;--warn:#a35f00;--plan:#73726e;--icon:#5f5e5b;
+}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hov:hover{background:var(--hover)}
+.chip:hover{border-color:var(--text3);color:var(--text)}
+input::placeholder{color:var(--text3);opacity:1}
+</style>
+</helmet>
+
+<div id="topo" class="root" data-theme="{{theme}}" style="display: flex; flex-wrap: wrap; min-height: max(100vh, 1320px); background: var(--bg); color: var(--text); font-family: 'DM Sans', system-ui, sans-serif; font-size: 14px; line-height: 1.45">
+
+  <!-- Sidebar -->
+  <aside style="flex: 1 1 248px; background: var(--side); border-right: 1px solid var(--border); padding: 16px 10px; display: flex; flex-direction: column; gap: 22px">
+    <div style="display: flex; align-items: center; gap: 10px; padding: 4px 8px">
+      <div style="width: 28px; height: 28px; border-radius: 8px; background: var(--accent); color: var(--on-accent); display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path></svg>
+      </div>
+      <div style="display: flex; flex-direction: column">
+        <span style="font-weight: 600; font-size: 14px">Assistente</span>
+        <span style="font-size: 12px; color: var(--text3)">Espaço pessoal</span>
+      </div>
+    </div>
+
+    <nav style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text3); padding: 0 8px 6px">Módulos</span>
+      <a class="hov" href="#topo" style="display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 7px; background: var(--raised); color: var(--text)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
+        <span>Início</span>
+      </a>
+      <a class="hov" href="#agenda" style="display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 7px; color: var(--text2)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
+        <span>Agenda</span>
+      </a>
+      <a class="hov" href="#financas" style="display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 7px; color: var(--text2)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"></path><path d="M16 13h2"></path></svg>
+        <span>Finanças</span>
+      </a>
+      <a class="hov" href="#casa" style="display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 7px; color: var(--text2)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg>
+        <span>Casa e Alexa</span>
+      </a>
+      <a class="hov" href="#tarefas" style="display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 7px; color: var(--text2)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"></rect><path d="M8 12l3 3 5-6"></path></svg>
+        <span>Tarefas</span>
+      </a>
+      <a class="hov" href="#integracoes" style="display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 7px; color: var(--text2)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 0 1-12 0z"></path><path d="M12 18v4"></path></svg>
+        <span>Integrações</span>
+      </a>
+      <a class="hov" href="#roadmap" style="display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 7px; color: var(--text2)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V4M5 4h12l-2 4 2 4H5"></path></svg>
+        <span>Base do sistema</span>
+      </a>
+    </nav>
+
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 2px">
+      <a class="hov" href="#topo" style="display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 7px; color: var(--text2)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"></path><circle cx="16" cy="6" r="2"></circle><circle cx="10" cy="12" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg>
+        <span>Configurações</span>
+      </a>
+      <span style="padding: 8px 8px 0; font-size: 12px; color: var(--text3)">Versão 0.1 · fundação</span>
+    </div>
+  </aside>
+
+  <!-- Conteúdo -->
+  <main style="flex: 999 1 560px; min-width: 0; padding: 18px clamp(16px, 4vw, 48px) 56px">
+    <div style="max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px">
+
+      <!-- Topbar -->
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; min-height: 34px">
+        <div style="display: flex; align-items: center; gap: 8px; color: var(--text2)">
+          <span>Assistente</span>
+          <span style="color: var(--faint)" aria-hidden="true">/</span>
+          <span style="color: var(--text)">Início</span>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--text2); font-size: 12px">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--warn)" aria-hidden="true"></span>
+            Dados de exemplo
+          </span>
+          <button class="hov" type="button" aria-label="{{themeLabel}}" onClick="{{toggleTheme}}" style="display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 10px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--text); font-size: 13px">
+            <sc-if value="{{isDark}}" hint-placeholder-val="{{ true }}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+            </sc-if>
+            <sc-if value="{{isLight}}" hint-placeholder-val="{{ false }}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+            </sc-if>
+            <span>{{themeButton}}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Saudação + prompt -->
+      <section style="display: flex; flex-direction: column; gap: 22px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 13px; color: var(--text2)">Sábado, 17 de outubro de 2026</span>
+          <h1 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 44px; line-height: 1.1; letter-spacing: -0.01em">Bom dia.</h1>
+          <p style="margin: 0; font-size: 16px; color: var(--text2)">{{summary}}</p>
+        </div>
+
+        <div style="background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 14px 14px 18px; display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text3)" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path></svg>
+            <input type="text" aria-label="Peça algo ao assistente" placeholder="Peça algo ao assistente…" style="flex: 1; min-width: 0; background: transparent; border: 0; color: var(--text); font-family: inherit; font-size: 15px; padding: 8px 0">
+            <button type="button" aria-label="Enviar" style="width: 36px; height: 36px; flex: 0 0 36px; border-radius: 10px; border: 0; background: var(--accent); color: var(--on-accent); display: flex; align-items: center; justify-content: center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+            </button>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px">
+            <sc-for list="{{chips}}" as="c" hint-placeholder-count="4">
+              <button class="chip" type="button" style="padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--text2); font-size: 13px">{{c.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cards -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 16px">
+
+        <!-- Agenda -->
+        <section id="agenda" style="background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div style="width: 28px; height: 28px; border-radius: 8px; background: var(--raised); color: var(--icon); display: flex; align-items: center; justify-content: center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
+            </div>
+            <h2 style="margin: 0; font-size: 14px; font-weight: 600; flex: 1">Agenda de hoje</h2>
+            <span style="font-size: 12px; color: var(--text3)">Google Calendar</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <sc-for list="{{events}}" as="e" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 10px 10px; border-radius: 10px; background: {{e.bg}}">
+                <span style="width: 44px; flex: 0 0 44px; font-size: 13px; color: var(--text2); font-variant-numeric: tabular-nums">{{e.time}}</span>
+                <span style="width: 8px; height: 8px; flex: 0 0 8px; border-radius: 50%; background: {{e.dot}}" aria-hidden="true"></span>
+                <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                  <span style="font-weight: 500">{{e.title}}</span>
+                  <span style="font-size: 12px; color: var(--text3)">{{e.meta}}</span>
+                </div>
+                <sc-if value="{{e.isNext}}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size: 12px; padding: 2px 8px; border-radius: 999px; background: var(--raised); color: var(--text); white-space: nowrap">Em 25 min</span>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- Finanças -->
+        <section id="financas" style="background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 16px; min-width: 0">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div style="width: 28px; height: 28px; border-radius: 8px; background: var(--raised); color: var(--icon); display: flex; align-items: center; justify-content: center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"></path><path d="M16 13h2"></path></svg>
+            </div>
+            <h2 style="margin: 0; font-size: 14px; font-weight: 600; flex: 1">Finanças</h2>
+            <span style="font-size: 12px; color: var(--text3)">Outubro</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <span style="font-size: 12px; color: var(--text3)">Gasto no mês</span>
+            <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px">
+              <span style="font-family: 'Newsreader', Georgia, serif; font-size: 34px; line-height: 1.1">{{spent}}</span>
+              <span style="font-size: 13px; color: var(--text2)">de {{budget}}</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <div style="position: relative; height: 8px; border-radius: 999px; background: var(--track); overflow: hidden">
+              <div style="height: 100%; width: {{pct}}%; border-radius: 999px; background: var(--accent)"></div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; font-size: 12px; color: var(--text2)">
+              <span>{{pct}}% do orçamento usado</span>
+              <span>{{pctMonth}}% do mês passou</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 14px; border-top: 1px solid var(--border-soft)">
+            <sc-for list="{{cats}}" as="c" hint-placeholder-count="5">
+              <div style="display: flex; align-items: center; gap: 10px; font-size: 13px">
+                <span style="width: 84px; flex: 0 0 84px; color: var(--text2)">{{c.name}}</span>
+                <div style="flex: 1; height: 6px; border-radius: 999px; background: var(--track2); overflow: hidden">
+                  <div style="height: 100%; width: {{c.w}}%; border-radius: 999px; background: {{c.color}}"></div>
+                </div>
+                <span style="width: 88px; flex: 0 0 88px; text-align: right; font-variant-numeric: tabular-nums">{{c.value}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- Casa e Alexa -->
+        <section id="casa" style="background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div style="width: 28px; height: 28px; border-radius: 8px; background: var(--raised); color: var(--icon); display: flex; align-items: center; justify-content: center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg>
+            </div>
+            <h2 style="margin: 0; font-size: 14px; font-weight: 600; flex: 1">Casa e Alexa</h2>
+            <span style="font-size: 12px; color: var(--text3)">{{devCount}}</span>
+          </div>
+          <div style="display: flex; flex-direction: column">
+            <sc-for list="{{devices}}" as="d" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 10px 2px; border-bottom: 1px solid var(--border-soft)">
+                <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                  <span style="font-weight: 500">{{d.name}}</span>
+                  <span style="font-size: 12px; color: var(--text3)">{{d.meta}}</span>
+                </div>
+                <sc-if value="{{d.on}}" hint-placeholder-val="{{ false }}">
+                  <button type="button" aria-pressed="true" aria-label="{{d.name}}" onClick="{{d.toggle}}" style="width: 40px; height: 24px; flex: 0 0 40px; border-radius: 999px; border: 0; padding: 3px; background: var(--accent); display: flex; justify-content: flex-end; align-items: center">
+                    <span style="width: 18px; height: 18px; border-radius: 50%; background: var(--knob-on)"></span>
+                  </button>
+                </sc-if>
+                <sc-if value="{{d.off}}" hint-placeholder-val="{{ true }}">
+                  <button type="button" aria-pressed="false" aria-label="{{d.name}}" onClick="{{d.toggle}}" style="width: 40px; height: 24px; flex: 0 0 40px; border-radius: 999px; border: 0; padding: 3px; background: var(--toggle-off); display: flex; justify-content: flex-start; align-items: center">
+                    <span style="width: 18px; height: 18px; border-radius: 50%; background: var(--knob-off)"></span>
+                  </button>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <span style="font-size: 12px; color: var(--text3)">Rotinas</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <sc-for list="{{routines}}" as="r" hint-placeholder-count="3">
+                <button class="chip" type="button" style="padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--text2); font-size: 13px">{{r.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tarefas -->
+        <section id="tarefas" style="background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div style="width: 28px; height: 28px; border-radius: 8px; background: var(--raised); color: var(--icon); display: flex; align-items: center; justify-content: center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"></rect><path d="M8 12l3 3 5-6"></path></svg>
+            </div>
+            <h2 style="margin: 0; font-size: 14px; font-weight: 600; flex: 1">Tarefas</h2>
+            <span style="font-size: 12px; color: var(--text3)">{{taskCount}}</span>
+          </div>
+          <div style="display: flex; flex-direction: column">
+            <sc-for list="{{tasks}}" as="t" hint-placeholder-count="5">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 9px 2px; border-bottom: 1px solid var(--border-soft)">
+                <sc-if value="{{t.open}}" hint-placeholder-val="{{ true }}">
+                  <button type="button" aria-pressed="false" aria-label="Concluir: {{t.title}}" onClick="{{t.toggle}}" style="width: 20px; height: 20px; flex: 0 0 20px; border-radius: 6px; border: 1.5px solid var(--check); background: transparent; padding: 0"></button>
+                  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                    <span style="font-weight: 500">{{t.title}}</span>
+                    <span style="font-size: 12px; color: var(--text3)">{{t.meta}}</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{t.done}}" hint-placeholder-val="{{ false }}">
+                  <button type="button" aria-pressed="true" aria-label="Reabrir: {{t.title}}" onClick="{{t.toggle}}" style="width: 20px; height: 20px; flex: 0 0 20px; border-radius: 6px; border: 0; background: var(--accent); color: var(--on-accent); padding: 0; display: flex; align-items: center; justify-content: center">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+                  </button>
+                  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                    <span style="font-weight: 500; color: var(--text3); text-decoration: line-through">{{t.title}}</span>
+                    <span style="font-size: 12px; color: var(--text3)">{{t.meta}}</span>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- Integrações -->
+        <section id="integracoes" style="background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div style="width: 28px; height: 28px; border-radius: 8px; background: var(--raised); color: var(--icon); display: flex; align-items: center; justify-content: center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 0 1-12 0z"></path><path d="M12 18v4"></path></svg>
+            </div>
+            <h2 style="margin: 0; font-size: 14px; font-weight: 600; flex: 1">Integrações</h2>
+          </div>
+          <div style="display: flex; flex-direction: column">
+            <sc-for list="{{integrations}}" as="i" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 11px 2px; border-bottom: 1px solid var(--border-soft)">
+                <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                  <span style="font-weight: 500">{{i.name}}</span>
+                  <span style="font-size: 12px; color: var(--text3)">{{i.desc}}</span>
+                </div>
+                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: 12px; color: {{i.color}}; white-space: nowrap">
+                  <span style="width: 6px; height: 6px; border-radius: 50%; background: {{i.color}}" aria-hidden="true"></span>
+                  {{i.status}}
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- Base do sistema -->
+        <section id="roadmap" style="background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div style="width: 28px; height: 28px; border-radius: 8px; background: var(--raised); color: var(--icon); display: flex; align-items: center; justify-content: center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V4M5 4h12l-2 4 2 4H5"></path></svg>
+            </div>
+            <h2 style="margin: 0; font-size: 14px; font-weight: 600; flex: 1">Base do sistema</h2>
+            <span style="font-size: 12px; color: var(--text3)">Roadmap</span>
+          </div>
+          <div style="display: flex; flex-direction: column">
+            <sc-for list="{{roadmap}}" as="m" hint-placeholder-count="6">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 9px 2px; border-bottom: 1px solid var(--border-soft)">
+                <span style="width: 22px; height: 22px; flex: 0 0 22px; border-radius: 6px; background: var(--raised); color: var(--text2); font-size: 12px; display: flex; align-items: center; justify-content: center">{{m.n}}</span>
+                <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                  <span style="font-weight: 500">{{m.title}}</span>
+                  <span style="font-size: 12px; color: var(--text3)">{{m.desc}}</span>
+                </div>
+                <span style="font-size: 12px; color: {{m.color}}; white-space: nowrap">{{m.status}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["dark","light"],"default":"dark"},"$preview":{"width":1440,"height":1320}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const theme = this.state.theme || this.props.theme || 'dark';
+    const isDark = theme !== 'light';
+    const fmt = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+    // Tarefas
+    const done = this.state.done || { t1: false, t2: false, t3: true, t4: false, t5: false };
+    const taskData = [
+      { id: 't1', title: 'Pagar fatura do cartão', meta: 'Vence dia 20' },
+      { id: 't2', title: 'Marcar consulta no dentista', meta: 'Esta semana' },
+      { id: 't3', title: 'Definir a arquitetura do núcleo do agente', meta: 'Projeto' },
+      { id: 't4', title: 'Revisar assinaturas mensais', meta: 'Finanças' },
+      { id: 't5', title: 'Comprar presente de aniversário', meta: 'Sábado que vem' }
+    ];
+    const tasks = taskData.map((t) => ({
+      ...t,
+      done: !!done[t.id],
+      open: !done[t.id],
+      toggle: () => this.setState({ done: { ...done, [t.id]: !done[t.id] } })
+    }));
+    const doneCount = tasks.filter((t) => t.done).length;
+    const openCount = tasks.length - doneCount;
+
+    // Agenda
+    const eventData = [
+      { time: '10:30', title: 'Revisão semanal', meta: 'Foco · 45 min', isNext: true },
+      { time: '12:30', title: 'Almoço com a família', meta: 'Presencial' },
+      { time: '15:00', title: 'Sessão de estudo do projeto', meta: 'Em casa · 2 h' },
+      { time: '19:30', title: 'Academia', meta: 'Rotina' }
+    ];
+    const events = eventData.map((e) => ({
+      ...e,
+      dot: e.isNext ? 'var(--accent)' : 'var(--dot-idle)',
+      bg: e.isNext ? 'var(--accent-soft)' : 'transparent'
+    }));
+
+    // Finanças
+    const spentV = 3420;
+    const budgetV = 5000;
+    const catData = [
+      { name: 'Moradia', v: 1200 },
+      { name: 'Mercado', v: 780 },
+      { name: 'Lazer', v: 530 },
+      { name: 'Transporte', v: 410 },
+      { name: 'Outros', v: 500 }
+    ];
+    const maxCat = Math.max(...catData.map((c) => c.v));
+    const cats = catData.map((c) => ({
+      name: c.name,
+      value: fmt(c.v),
+      w: Math.round((c.v / maxCat) * 100),
+      color: c.v === maxCat ? 'var(--accent)' : 'var(--bar)'
+    }));
+
+    // Casa e Alexa
+    const dev = this.state.dev || { luz: true, ar: false, cafe: false, tv: false };
+    const devData = [
+      { id: 'luz', name: 'Luz da sala', meta: 'Echo Dot · Sala' },
+      { id: 'ar', name: 'Ar-condicionado', meta: 'Quarto' },
+      { id: 'cafe', name: 'Tomada da cafeteira', meta: 'Cozinha' },
+      { id: 'tv', name: 'TV', meta: 'Sala' }
+    ];
+    const devices = devData.map((d) => ({
+      ...d,
+      on: !!dev[d.id],
+      off: !dev[d.id],
+      toggle: () => this.setState({ dev: { ...dev, [d.id]: !dev[d.id] } })
+    }));
+    const onCount = devices.filter((d) => d.on).length;
+
+    // Integrações
+    const integrations = [
+      { name: 'Google Calendar', desc: 'Eventos e lembretes', status: 'Conectado', color: 'var(--ok)' },
+      { name: 'Amazon Alexa', desc: 'Dispositivos e rotinas', status: 'Pendente', color: 'var(--warn)' },
+      { name: 'Open Finance', desc: 'Contas e transações', status: 'Pendente', color: 'var(--warn)' },
+      { name: 'Notificações', desc: 'Avisos proativos', status: 'Planejado', color: 'var(--plan)' }
+    ];
+
+    // Base do sistema
+    const roadmap = [
+      { title: 'Núcleo do agente', desc: 'Orquestração, ferramentas e prompts', status: 'Em andamento', color: 'var(--accent)' },
+      { title: 'Memória e preferências', desc: 'Perfil, contexto e histórico', status: 'A fazer', color: 'var(--plan)' },
+      { title: 'Agenda', desc: 'Ler e criar eventos', status: 'A fazer', color: 'var(--plan)' },
+      { title: 'Alexa', desc: 'Skill customizada e rotinas', status: 'A fazer', color: 'var(--plan)' },
+      { title: 'Finanças', desc: 'Importação, categorias e orçamento', status: 'A fazer', color: 'var(--plan)' },
+      { title: 'Rotinas proativas', desc: 'Resumo diário e alertas', status: 'A fazer', color: 'var(--plan)' }
+    ].map((m, i) => ({ ...m, n: i + 1 }));
+
+    const plural = (n, s, p) => (n === 1 ? s : p);
+
+    return {
+      theme: isDark ? 'dark' : 'light',
+      isDark,
+      isLight: !isDark,
+      themeButton: isDark ? 'Modo claro' : 'Modo escuro',
+      themeLabel: isDark ? 'Mudar para o modo claro' : 'Mudar para o modo escuro',
+      toggleTheme: () => this.setState({ theme: isDark ? 'light' : 'dark' }),
+      summary:
+        'Você tem ' + events.length + ' compromissos hoje e ' + openCount + ' ' +
+        plural(openCount, 'tarefa em aberto', 'tarefas em aberto') + '.',
+      chips: [
+        { label: 'Resumir minha semana' },
+        { label: 'Quanto gastei este mês?' },
+        { label: 'Apagar as luzes da sala' },
+        { label: 'Criar um lembrete' }
+      ],
+      routines: [{ label: 'Bom dia' }, { label: 'Boa noite' }, { label: 'Saindo de casa' }],
+      events,
+      spent: fmt(spentV),
+      budget: fmt(budgetV),
+      pct: Math.round((spentV / budgetV) * 100),
+      pctMonth: Math.round((17 / 31) * 100),
+      cats,
+      devices,
+      devCount: onCount + ' de ' + devices.length + ' ligados',
+      tasks,
+      taskCount: doneCount + ' de ' + tasks.length + ' concluídas',
+      integrations,
+      roadmap
+    };
+  }
+}
+</script>
+</body>
+</html>
