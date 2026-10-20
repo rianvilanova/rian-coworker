@@ -367,42 +367,77 @@ class GoogleCalendarService {
   }
 
   /**
-   * Lista eventos de uma conta específica
+   * Lista as agendas visíveis (selected) de uma conta: principal, secundárias, feriados, turmas, etc.
+   */
+  async listCalendarsForAccount(email, token) {
+    const res = await fetch('https://www.googleapis.com/calendar/v3/users/me/calendarList?minAccessRole=reader', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      console.warn(`[GoogleCalendarService] Falha ao listar agendas da conta ${email}: ${res.status} ${data.error?.message || ''}`);
+      return [{ id: 'primary', summary: email, primary: true }];
+    }
+
+    const data = await res.json();
+    return (data.items || []).filter(cal => cal.selected || cal.primary);
+  }
+
+  /**
+   * Lista eventos de uma conta específica (de todas as agendas visíveis, ou de options.calendarId)
    */
   async listEventsForAccount(email, options = {}) {
-    const token = await this.getValidAccessToken(email);
+    let token;
+    try {
+      token = await this.getValidAccessToken(email);
+    } catch (err) {
+      console.warn(`[GoogleCalendarService] Token inválido para ${email}: ${err.message}`);
+      return [];
+    }
     if (!token) return [];
 
     const store = this.loadStore();
     const account = store.accounts[email] || {};
 
-    const calendarId = encodeURIComponent(options.calendarId || 'primary');
+    // Janela padrão: 30 dias atrás até 90 dias à frente (cobre navegação de mês/semana
+    // e evita que eventos recorrentes anuais, como aniversários, encham a lista até 2056)
     const now = new Date();
-    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-    const timeMin = options.timeMin || startOfDay.toISOString();
+    const timeMin = options.timeMin || new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30).toISOString();
+    const timeMax = options.timeMax || new Date(now.getFullYear(), now.getMonth(), now.getDate() + 90).toISOString();
 
-    const params = new URLSearchParams({
-      singleEvents: 'true',
-      orderBy: 'startTime',
-      timeMin,
-      maxResults: String(options.maxResults || 25)
-    });
+    const calendars = options.calendarId
+      ? [{ id: options.calendarId }]
+      : await this.listCalendarsForAccount(email, token);
 
-    if (options.timeMax) params.append('timeMax', options.timeMax);
-    if (options.query) params.append('q', options.query);
+    const results = await Promise.all(calendars.map(async cal => {
+      const params = new URLSearchParams({
+        singleEvents: 'true',
+        orderBy: 'startTime',
+        timeMin,
+        timeMax,
+        maxResults: String(options.maxResults || 250)
+      });
+      if (options.query) params.append('q', options.query);
 
-    const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?${params.toString()}`;
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(cal.id)}/events?${params.toString()}`;
+      const res = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-    if (!res.ok) {
-      console.warn(`[GoogleCalendarService] Falha ao buscar eventos da conta ${email}:`, res.statusText);
-      return [];
-    }
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        console.warn(`[GoogleCalendarService] Falha ao buscar eventos de "${cal.summary || cal.id}" (${email}): ${res.status} ${data.error?.message || ''}`);
+        return [];
+      }
 
-    const data = await res.json();
-    return (data.items || []).map(item => this.normalizeEvent(item, account));
+      const data = await res.json();
+      return (data.items || [])
+        .filter(item => item.status !== 'cancelled')
+        .map(item => this.normalizeEvent(item, account, cal));
+    }));
+
+    return results.flat();
   }
 
   /**
@@ -416,14 +451,12 @@ class GoogleCalendarService {
       return [];
     }
 
-    // Se foi solicitada uma conta específica
-    if (options.accountEmail && options.accountEmail !== 'all') {
-      return await this.listEventsForAccount(options.accountEmail, options);
-    }
+    // Se foi solicitada uma conta específica, busca só nela; senão, em todas em paralelo
+    const targetAccounts = (options.accountEmail && options.accountEmail !== 'all')
+      ? [options.accountEmail]
+      : accounts;
 
-    // Busca eventos de todas as contas em paralelo
-    const promises = accounts.map(accEmail => this.listEventsForAccount(accEmail, options));
-    const results = await Promise.all(promises);
+    const results = await Promise.all(targetAccounts.map(accEmail => this.listEventsForAccount(accEmail, options)));
 
     // Une todos os eventos
     const allEvents = results.flat();
@@ -497,7 +530,7 @@ class GoogleCalendarService {
     }
 
     const account = store.accounts[targetEmail] || {};
-    return this.normalizeEvent(data, account);
+    return this.normalizeEvent(data, account, { id: calendarId });
   }
 
   /**
@@ -556,13 +589,13 @@ class GoogleCalendarService {
     }
 
     const account = store.accounts[targetEmail] || {};
-    return this.normalizeEvent(data, account);
+    return this.normalizeEvent(data, account, { id: calendarId });
   }
 
   /**
    * Normaliza um evento incluindo metadados da conta Google correspondente
    */
-  normalizeEvent(googleEvent, account = {}) {
+  normalizeEvent(googleEvent, account = {}, calendar = {}) {
     const startRaw = googleEvent.start?.dateTime || googleEvent.start?.date || '';
     const endRaw = googleEvent.end?.dateTime || googleEvent.end?.date || '';
 
@@ -596,6 +629,9 @@ class GoogleCalendarService {
       meetLink,
       htmlLink: googleEvent.htmlLink,
       isNext,
+      // Agenda de origem (necessária para excluir eventos de agendas secundárias)
+      calendarId: calendar.id || 'primary',
+      calendarName: calendar.summary || '',
       // Metadados da conta
       accountEmail: account.email || 'Google Calendar',
       accountName: account.name || 'Conta Google',

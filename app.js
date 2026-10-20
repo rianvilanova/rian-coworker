@@ -1279,7 +1279,11 @@
    */
   async function deleteGoogleCalendarEvent(eventId, accountEmail) {
     try {
-      const param = accountEmail ? `?account=${encodeURIComponent(accountEmail)}` : '';
+      const event = state.calendar.events.find(e => e.id === eventId);
+      const params = new URLSearchParams();
+      if (accountEmail) params.append('account', accountEmail);
+      if (event && event.calendarId) params.append('calendarId', event.calendarId);
+      const param = params.toString() ? `?${params.toString()}` : '';
       const res = await fetch(`/api/calendar/events/${encodeURIComponent(eventId)}${param}`, {
         method: 'DELETE'
       });

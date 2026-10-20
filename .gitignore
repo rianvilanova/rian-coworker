@@ -1,0 +1,18 @@
+# Credenciais e tokens OAuth do Google Calendar (nunca versionar)
+integrations/google-calendar/config.json
+integrations/google-calendar/tokens.json
+
+# Variáveis de ambiente
+.env
+.env.*
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

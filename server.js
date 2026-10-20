@@ -201,8 +201,8 @@ const server = http.createServer(async (req, res) => {
       const events = await calendarService.listEvents({
         timeMin: searchParams.get('timeMin') || undefined,
         timeMax: searchParams.get('timeMax') || undefined,
-        maxResults: searchParams.get('maxResults') ? parseInt(searchParams.get('maxResults'), 10) : 50,
-        calendarId: searchParams.get('calendarId') || 'primary',
+        maxResults: searchParams.get('maxResults') ? parseInt(searchParams.get('maxResults'), 10) : undefined,
+        calendarId: searchParams.get('calendarId') || undefined, // sem calendarId = todas as agendas visíveis
         accountEmail: searchParams.get('account') || undefined
       });
       return sendJson(res, 200, { events });
@@ -256,8 +256,16 @@ const server = http.createServer(async (req, res) => {
   // ==========================================
   let filePath = path.join(PUBLIC_DIR, pathname === '/' ? 'index.html' : pathname);
   
+  // Bloqueia arquivos sensíveis: credenciais/tokens e código em integrations/ (exceto guias .md),
+  // arquivos ocultos (.git, .env, .gitignore) e o próprio servidor
+  const relPath = path.relative(PUBLIC_DIR, filePath).split(path.sep).join('/');
+  const isSensitive =
+    relPath.split('/').some(segment => segment.startsWith('.')) ||
+    (relPath.startsWith('integrations/') && path.extname(relPath).toLowerCase() !== '.md') ||
+    relPath === 'server.js';
+
   // Prevenção contra Path Traversal
-  if (!filePath.startsWith(PUBLIC_DIR)) {
+  if (!filePath.startsWith(PUBLIC_DIR) || isSensitive) {
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
     return res.end('Acesso proibido.');
   }
