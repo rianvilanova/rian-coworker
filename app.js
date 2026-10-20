@@ -1277,6 +1277,76 @@
   /**
    * Exclui um evento
    */
+  // ========================================================
+  // FINANÇAS: REGISTRO DE GASTOS NA PLANILHA (GOOGLE SHEETS)
+  // ========================================================
+
+  async function openNewExpenseModal() {
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const dateInput = document.getElementById('expense-date');
+    if (dateInput) dateInput.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
+    openModal('modal-new-expense');
+    document.getElementById('expense-description')?.focus();
+
+    const statusEl = document.getElementById('expense-sheet-status');
+    if (!statusEl) return;
+    statusEl.style.color = 'var(--text3)';
+    statusEl.textContent = 'Verificando planilha...';
+
+    try {
+      const res = await fetch('/api/finance/status');
+      const status = await res.json();
+      if (status.connected) {
+        statusEl.textContent = `Será salvo em "${status.spreadsheetTitle}" › ${status.sheetTitle} (${status.accountEmail})`;
+      } else {
+        statusEl.style.color = 'var(--warn, #e0a45a)';
+        statusEl.textContent = status.message || 'Planilha indisponível.';
+      }
+    } catch {
+      statusEl.style.color = 'var(--warn, #e0a45a)';
+      statusEl.textContent = 'Servidor local offline. Rode "node server.js" para registrar na planilha.';
+    }
+  }
+
+  async function submitExpense() {
+    const submitBtn = document.getElementById('btn-submit-expense');
+    const payload = {
+      paymentMethod: document.querySelector('input[name="expense-method"]:checked')?.value,
+      description: document.getElementById('expense-description')?.value.trim(),
+      amount: parseFloat(document.getElementById('expense-amount')?.value),
+      date: document.getElementById('expense-date')?.value
+    };
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.7';
+    }
+
+    try {
+      const res = await fetch('/api/finance/expenses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Falha ao registrar gasto.');
+
+      const valor = data.expense.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      showToast(`Gasto registrado: ${data.expense.description} · ${valor} (${data.expense.paymentMethod}) — linha ${data.expense.row}`, '💰');
+      document.getElementById('form-new-expense')?.reset();
+      closeModal('modal-new-expense');
+    } catch (err) {
+      showToast(err.message, '⚠️');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+      }
+    }
+  }
+
   async function deleteGoogleCalendarEvent(eventId, accountEmail) {
     try {
       const event = state.calendar.events.find(e => e.id === eventId);
@@ -1534,6 +1604,13 @@
       if (e.target.closest('#btn-open-new-event')) {
         e.preventDefault();
         openModal('modal-new-event');
+        return;
+      }
+
+      // Abertura do Modal Registrar Gasto (Finanças → Google Sheets)
+      if (e.target.closest('#btn-open-new-expense')) {
+        e.preventDefault();
+        openNewExpenseModal();
         return;
       }
 
@@ -1811,6 +1888,15 @@
           quickAddGoogleCalendarEvent(text, accountEmail);
           document.getElementById('quick-add-text').value = '';
         }
+      });
+    }
+
+    // Submissão do Registro de Gasto
+    const formNewExpense = document.getElementById('form-new-expense');
+    if (formNewExpense) {
+      formNewExpense.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitExpense();
       });
     }
 

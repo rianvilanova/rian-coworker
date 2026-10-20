@@ -13,6 +13,9 @@ const url = require('url');
 const GoogleCalendarService = require('./integrations/google-calendar/google-calendar-service');
 const calendarService = new GoogleCalendarService();
 
+const GoogleSheetsService = require('./integrations/google-sheets/google-sheets-service');
+const sheetsService = new GoogleSheetsService(calendarService);
+
 const PORT = process.env.PORT || 3001;
 const PUBLIC_DIR = __dirname;
 
@@ -248,6 +251,27 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, 200, result);
     } catch (err) {
       return sendJson(res, 500, { error: err.message });
+    }
+  }
+
+  // ==========================================
+  // ROTAS DA API: /api/finance/* (Google Sheets)
+  // ==========================================
+
+  // 12. Status da Planilha de Finanças
+  if (pathname === '/api/finance/status' && method === 'GET') {
+    const status = await sheetsService.getStatus();
+    return sendJson(res, 200, status);
+  }
+
+  // 13. Registrar Gasto na Planilha
+  if (pathname === '/api/finance/expenses' && method === 'POST') {
+    try {
+      const body = await readJsonBody(req);
+      const result = await sheetsService.addExpense(body);
+      return sendJson(res, 201, { success: true, expense: result });
+    } catch (err) {
+      return sendJson(res, 400, { error: err.message });
     }
   }
 

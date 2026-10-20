@@ -1,6 +1,7 @@
 # Credenciais e tokens OAuth do Google Calendar (nunca versionar)
 integrations/google-calendar/config.json
 integrations/google-calendar/tokens.json
+integrations/google-sheets/config.json
 
 # Variáveis de ambiente
 .env
