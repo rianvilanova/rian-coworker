@@ -8,6 +8,14 @@
 (function () {
   'use strict';
 
+  // Helper para datas relativas de demonstração
+  const getRelativeMockDate = (dayOffset, h, m) => {
+    const d = new Date();
+    d.setDate(d.getDate() + dayOffset);
+    d.setHours(h, m, 0, 0);
+    return d.toISOString();
+  };
+
   // --- Estado Global da Aplicação ---
   const state = {
     theme: localStorage.getItem('rian_theme') || 'dark',
@@ -38,6 +46,8 @@
       primaryEmail: null,
       accountFilter: 'all',
       periodFilter: 'hoje',
+      viewMode: 'month',
+      currentDate: new Date(),
       syncing: false,
       lastSync: null,
       events: [
@@ -46,10 +56,11 @@
           title: 'Revisão semanal com time',
           time: '10:30',
           meta: 'Foco e Alinhamento · Google Meet',
-          start: new Date(Date.now() + 25 * 60 * 1000).toISOString(),
-          end: new Date(Date.now() + 70 * 60 * 1000).toISOString(),
+          start: getRelativeMockDate(0, 10, 30),
+          end: getRelativeMockDate(0, 11, 30),
           location: 'Google Meet',
           meetLink: 'https://meet.google.com/abc-defg-hij',
+          description: 'Alinhamento semanal com a equipe sobre os entregáveis da sprint e bloqueios técnicos.',
           accountEmail: 'rianvlnv@gmail.com',
           accountName: 'Rian Vilanova',
           accountColor: '#6EA1FF',
@@ -61,9 +72,10 @@
           title: 'Almoço com a família',
           time: '12:30',
           meta: 'Restaurante Central · Presencial',
-          start: new Date(new Date().setHours(12, 30, 0, 0)).toISOString(),
-          end: new Date(new Date().setHours(14, 0, 0, 0)).toISOString(),
+          start: getRelativeMockDate(0, 12, 30),
+          end: getRelativeMockDate(0, 14, 0),
           location: 'Restaurante Central',
+          description: 'Almoço em família para celebrar o final de semana.',
           accountEmail: 'rianvlnv@gmail.com',
           accountName: 'Rian Vilanova',
           accountColor: '#6EA1FF',
@@ -75,9 +87,10 @@
           title: 'Sessão de estudo do projeto Rian',
           time: '15:00',
           meta: 'Em casa · Bloco de 2 horas',
-          start: new Date(new Date().setHours(15, 0, 0, 0)).toISOString(),
-          end: new Date(new Date().setHours(17, 0, 0, 0)).toISOString(),
+          start: getRelativeMockDate(0, 15, 0),
+          end: getRelativeMockDate(0, 17, 0),
           location: 'Escritório',
+          description: 'Desenvolvimento e refatoração da arquitetura do assistente e integrações IoT.',
           accountEmail: 'rianvlnv@gmail.com',
           accountName: 'Rian Vilanova',
           accountColor: '#6EA1FF',
@@ -89,13 +102,106 @@
           title: 'Academia & Treino',
           time: '19:30',
           meta: 'SmartFit · Rotina diária',
-          start: new Date(new Date().setHours(19, 30, 0, 0)).toISOString(),
-          end: new Date(new Date().setHours(21, 0, 0, 0)).toISOString(),
+          start: getRelativeMockDate(0, 19, 30),
+          end: getRelativeMockDate(0, 21, 0),
           location: 'SmartFit',
+          description: 'Treino de musculação e cárdio.',
           accountEmail: 'rianvlnv@gmail.com',
           accountName: 'Rian Vilanova',
           accountColor: '#6EA1FF',
           accountLabel: 'Principal',
+          isNext: false
+        },
+        {
+          id: 'mock_5',
+          title: 'Call com Cliente Parceiro',
+          time: '11:00',
+          meta: 'Google Meet · Apresentação',
+          start: getRelativeMockDate(1, 11, 0),
+          end: getRelativeMockDate(1, 12, 0),
+          location: 'Google Meet',
+          meetLink: 'https://meet.google.com/xyz-uvwx-rst',
+          description: 'Demonstração dos novos módulos integrados e roadmap da versão 2.0.',
+          accountEmail: 'rian.trabalho@gmail.com',
+          accountName: 'Rian Trabalho',
+          accountColor: '#6fbf8f',
+          accountLabel: 'Trabalho',
+          isNext: false
+        },
+        {
+          id: 'mock_6',
+          title: 'Consulta Médica de Rotina',
+          time: '16:00',
+          meta: 'Clínica São Bento · Presencial',
+          start: getRelativeMockDate(1, 16, 0),
+          end: getRelativeMockDate(1, 17, 0),
+          location: 'Clínica São Bento, Sala 304',
+          description: 'Exames periódicos e avaliação de rotina.',
+          accountEmail: 'rianvlnv@gmail.com',
+          accountName: 'Rian Vilanova',
+          accountColor: '#6EA1FF',
+          accountLabel: 'Principal',
+          isNext: false
+        },
+        {
+          id: 'mock_7',
+          title: 'Daily & Planejamento da Semana',
+          time: '09:00',
+          meta: 'Discord · Voz',
+          start: getRelativeMockDate(-1, 9, 0),
+          end: getRelativeMockDate(-1, 10, 0),
+          location: 'Discord',
+          description: 'Definição das metas e prioridades para a semana.',
+          accountEmail: 'rian.trabalho@gmail.com',
+          accountName: 'Rian Trabalho',
+          accountColor: '#6fbf8f',
+          accountLabel: 'Trabalho',
+          isNext: false
+        },
+        {
+          id: 'mock_8',
+          title: 'Workshop de Inteligência Artificial',
+          time: '14:00',
+          meta: 'Google Meet · Evento Tech',
+          start: getRelativeMockDate(3, 14, 0),
+          end: getRelativeMockDate(3, 16, 30),
+          location: 'Google Meet',
+          meetLink: 'https://meet.google.com/ai-workshop-2026',
+          description: 'Oficina prática sobre agentes autônomos e arquiteturas com LLMs.',
+          accountEmail: 'rianvlnv@gmail.com',
+          accountName: 'Rian Vilanova',
+          accountColor: '#6EA1FF',
+          accountLabel: 'Principal',
+          isNext: false
+        },
+        {
+          id: 'mock_9',
+          title: 'Revisão Financeira & Investimentos',
+          time: '10:00',
+          meta: 'Home Office · Planejamento',
+          start: getRelativeMockDate(5, 10, 0),
+          end: getRelativeMockDate(5, 11, 30),
+          location: 'Home Office',
+          description: 'Acompanhamento do fechamento de contas e metas mensais.',
+          accountEmail: 'rianvlnv@gmail.com',
+          accountName: 'Rian Vilanova',
+          accountColor: '#6EA1FF',
+          accountLabel: 'Principal',
+          isNext: false
+        },
+        {
+          id: 'mock_10',
+          title: 'Jantar com a Equipe',
+          time: '18:30',
+          meta: 'Restaurante Fasano · Confraternização',
+          start: getRelativeMockDate(7, 18, 30),
+          end: getRelativeMockDate(7, 21, 0),
+          location: 'Restaurante Fasano',
+          description: 'Encontro de alinhamento e comemoração do fechamento do ciclo.',
+          accountEmail: 'rian.trabalho@gmail.com',
+          accountName: 'Rian Trabalho',
+          accountColor: '#6fbf8f',
+          accountLabel: 'Trabalho',
           isNext: false
         }
       ]
@@ -526,35 +632,367 @@
     }
   }
 
-  /**
-   * Renderiza os eventos na Linha do Tempo da Agenda
-   */
-  function renderCalendarEvents() {
+  // ========================================================
+  // IMPLEMENTAÇÃO DE VISUALIZAÇÕES DO CALENDÁRIO (MÊS, SEMANA, LISTA)
+  // ========================================================
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function toDateKey(d) {
+    if (!d) return '';
+    if (d instanceof Date && !isNaN(d.getTime())) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+    if (typeof d === 'string') {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(d.trim())) {
+        return d.trim();
+      }
+      const parsed = new Date(d);
+      if (!isNaN(parsed.getTime())) {
+        const y = parsed.getFullYear();
+        const m = String(parsed.getMonth() + 1).padStart(2, '0');
+        const day = String(parsed.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+    }
+    return '';
+  }
+
+  function getEventDateKey(e) {
+    if (e.start) return toDateKey(e.start);
+    return toDateKey(new Date());
+  }
+
+  function updateCalendarPeriodTitle() {
+    const titleEl = document.getElementById('cal-period-title');
+    if (!titleEl) return;
+
+    const curr = state.calendar.currentDate || new Date();
+    const monthNames = [
+      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+    const monthNamesShort = [
+      'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+      'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+    ];
+
+    if (state.calendar.viewMode === 'month') {
+      titleEl.textContent = `${monthNames[curr.getMonth()]} de ${curr.getFullYear()}`;
+    } else if (state.calendar.viewMode === 'week') {
+      const currDay = curr.getDay();
+      const startOfWeek = new Date(curr);
+      startOfWeek.setDate(curr.getDate() - currDay);
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+      if (startOfWeek.getMonth() === endOfWeek.getMonth() && startOfWeek.getFullYear() === endOfWeek.getFullYear()) {
+        titleEl.textContent = `${startOfWeek.getDate()} – ${endOfWeek.getDate()} de ${monthNames[startOfWeek.getMonth()]} de ${startOfWeek.getFullYear()}`;
+      } else if (startOfWeek.getFullYear() === endOfWeek.getFullYear()) {
+        titleEl.textContent = `${startOfWeek.getDate()} de ${monthNamesShort[startOfWeek.getMonth()]} – ${endOfWeek.getDate()} de ${monthNamesShort[endOfWeek.getMonth()]} de ${startOfWeek.getFullYear()}`;
+      } else {
+        titleEl.textContent = `${startOfWeek.getDate()} de ${monthNamesShort[startOfWeek.getMonth()]}, ${startOfWeek.getFullYear()} – ${endOfWeek.getDate()} de ${monthNamesShort[endOfWeek.getMonth()]}, ${endOfWeek.getFullYear()}`;
+      }
+    } else {
+      titleEl.textContent = `${monthNames[curr.getMonth()]} de ${curr.getFullYear()}`;
+    }
+  }
+
+  function setCalendarViewMode(mode) {
+    if (!['month', 'week', 'schedule'].includes(mode)) mode = 'month';
+    state.calendar.viewMode = mode;
+
+    document.querySelectorAll('.calendar-view-btn').forEach(btn => {
+      if (btn.dataset.viewMode === mode) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    const monthView = document.getElementById('calendar-view-month');
+    const weekView = document.getElementById('calendar-view-week');
+    const scheduleView = document.getElementById('calendar-view-schedule');
+
+    if (monthView) monthView.style.display = (mode === 'month') ? 'flex' : 'none';
+    if (weekView) weekView.style.display = (mode === 'week') ? 'flex' : 'none';
+    if (scheduleView) scheduleView.style.display = (mode === 'schedule') ? 'flex' : 'none';
+
+    renderAllCalendarViews();
+  }
+
+  function renderMonthView() {
+    const daysGrid = document.getElementById('calendar-month-days-grid');
+    if (!daysGrid) return;
+
+    const curr = state.calendar.currentDate || new Date();
+    const year = curr.getFullYear();
+    const month = curr.getMonth();
+
+    const firstDayOfMonth = new Date(year, month, 1);
+    const startDayOfWeek = firstDayOfMonth.getDay();
+    const daysInCurrentMonth = new Date(year, month + 1, 0).getDate();
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+    const totalCells = Math.ceil((startDayOfWeek + daysInCurrentMonth) / 7) * 7;
+    const todayKey = toDateKey(new Date());
+
+    const events = (state.calendar.events || []).filter(e => {
+      if (state.calendar.accountFilter !== 'all' && e.accountEmail) {
+        return e.accountEmail === state.calendar.accountFilter;
+      }
+      return true;
+    });
+
+    const eventsByDay = {};
+    events.forEach(e => {
+      const key = getEventDateKey(e);
+      if (!eventsByDay[key]) eventsByDay[key] = [];
+      eventsByDay[key].push(e);
+    });
+
+    let cellsHtml = '';
+
+    for (let i = 0; i < totalCells; i++) {
+      let cellDate;
+      let isOtherMonth = false;
+      let dayNum;
+
+      if (i < startDayOfWeek) {
+        dayNum = daysInPrevMonth - startDayOfWeek + 1 + i;
+        cellDate = new Date(year, month - 1, dayNum);
+        isOtherMonth = true;
+      } else if (i < startDayOfWeek + daysInCurrentMonth) {
+        dayNum = i - startDayOfWeek + 1;
+        cellDate = new Date(year, month, dayNum);
+        isOtherMonth = false;
+      } else {
+        dayNum = i - (startDayOfWeek + daysInCurrentMonth) + 1;
+        cellDate = new Date(year, month + 1, dayNum);
+        isOtherMonth = true;
+      }
+
+      const dateKey = toDateKey(cellDate);
+      const isToday = (dateKey === todayKey);
+      const dayEvents = (eventsByDay[dateKey] || []).slice();
+
+      dayEvents.sort((a, b) => {
+        const tA = (a.start && a.start.includes('T')) ? new Date(a.start).getTime() : 0;
+        const tB = (b.start && b.start.includes('T')) ? new Date(b.start).getTime() : 0;
+        return tA - tB;
+      });
+
+      const maxPills = 3;
+      const visibleEvents = dayEvents.slice(0, maxPills);
+      const remainingCount = dayEvents.length - maxPills;
+
+      const pillsHtml = visibleEvents.map(e => {
+        const color = e.accountColor || '#6EA1FF';
+        return `
+          <div class="cal-event-pill" style="background: ${color};" data-event-id="${e.id}" title="${escapeHtml(e.title)} (${e.time || ''})">
+            ${e.time ? `<span class="event-pill-time">${e.time}</span>` : ''}
+            <span class="event-pill-title">${escapeHtml(e.title)}</span>
+          </div>
+        `;
+      }).join('');
+
+      const moreHtml = remainingCount > 0 
+        ? `<div class="cal-event-more" data-more-date="${dateKey}" title="Ver todos os ${dayEvents.length} eventos">+${remainingCount} mais</div>`
+        : '';
+
+      cellsHtml += `
+        <div class="calendar-day-cell ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''}" data-day-date="${dateKey}" title="Clique para agendar em ${dayNum}/${month + 1}">
+          <div class="calendar-day-header">
+            <span class="calendar-day-number">${dayNum}</span>
+          </div>
+          <div class="calendar-day-events">
+            ${pillsHtml}
+            ${moreHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    daysGrid.innerHTML = cellsHtml;
+  }
+
+  function renderWeekView() {
+    const headerRow = document.getElementById('calendar-week-header-row');
+    const bodyGrid = document.getElementById('calendar-week-body-grid');
+    if (!headerRow || !bodyGrid) return;
+
+    const curr = state.calendar.currentDate || new Date();
+    const currDay = curr.getDay();
+    const startOfWeek = new Date(curr);
+    startOfWeek.setDate(curr.getDate() - currDay);
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    const dayNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+    const todayKey = toDateKey(new Date());
+
+    const weekDays = [];
+    for (let d = 0; d < 7; d++) {
+      const dayDate = new Date(startOfWeek);
+      dayDate.setDate(startOfWeek.getDate() + d);
+      weekDays.push({
+        date: dayDate,
+        dateKey: toDateKey(dayDate),
+        dayName: dayNames[d],
+        dayNum: dayDate.getDate(),
+        isToday: toDateKey(dayDate) === todayKey
+      });
+    }
+
+    headerRow.innerHTML = `
+      <div class="calendar-week-header-time">GMT-3</div>
+      ${weekDays.map(d => `
+        <div class="calendar-week-header-day ${d.isToday ? 'today' : ''}" data-date="${d.dateKey}" style="cursor: pointer" title="Clique para agendar neste dia">
+          <span class="calendar-week-dayname">${d.dayName}</span>
+          <span class="calendar-week-daynum">${d.dayNum}</span>
+        </div>
+      `).join('')}
+    `;
+
+    const events = (state.calendar.events || []).filter(e => {
+      if (state.calendar.accountFilter !== 'all' && e.accountEmail) {
+        return e.accountEmail === state.calendar.accountFilter;
+      }
+      return true;
+    });
+
+    const eventsByDay = {};
+    events.forEach(e => {
+      const key = getEventDateKey(e);
+      if (!eventsByDay[key]) eventsByDay[key] = [];
+      eventsByDay[key].push(e);
+    });
+
+    const timeColHtml = `
+      <div class="calendar-week-time-col">
+        ${Array.from({ length: 24 }).map((_, h) => `
+          <div class="calendar-week-hour-label">${String(h).padStart(2, '0')}:00</div>
+        `).join('')}
+      </div>
+    `;
+
+    const dayColsHtml = weekDays.map(d => {
+      const dayEvents = (eventsByDay[d.dateKey] || []).slice();
+
+      const slotsHtml = Array.from({ length: 24 }).map((_, h) => `
+        <div class="calendar-week-hour-slot" data-slot-date="${d.dateKey}" data-slot-hour="${h}" title="${d.dayName} às ${String(h).padStart(2, '0')}:00 - Clique para criar evento"></div>
+      `).join('');
+
+      const cardsHtml = dayEvents.map(e => {
+        let startHour = 9;
+        let durationHours = 1;
+
+        if (e.start && e.start.includes('T')) {
+          const sD = new Date(e.start);
+          if (!isNaN(sD.getTime())) {
+            startHour = sD.getHours() + (sD.getMinutes() / 60);
+          }
+        } else if (e.time && e.time.includes(':')) {
+          const parts = e.time.split(':');
+          startHour = parseInt(parts[0], 10) + (parseInt(parts[1] || '0', 10) / 60);
+        }
+
+        if (e.end && e.end.includes('T') && e.start && e.start.includes('T')) {
+          const sD = new Date(e.start);
+          const eD = new Date(e.end);
+          const diff = (eD.getTime() - sD.getTime()) / (1000 * 60 * 60);
+          if (diff > 0 && !isNaN(diff)) durationHours = diff;
+        }
+
+        const slotHeight = 52;
+        const top = Math.round(startHour * slotHeight);
+        const height = Math.max(Math.round(durationHours * slotHeight) - 4, 24);
+        const color = e.accountColor || '#6EA1FF';
+
+        return `
+          <div class="calendar-week-event-card" style="top: ${top}px; height: ${height}px; background: ${color};" data-event-id="${e.id}" title="${escapeHtml(e.title)} (${e.time || ''})">
+            <div style="font-weight: 600; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">
+              ${escapeHtml(e.title)}
+            </div>
+            <div style="font-size: 10px; opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">
+              ${e.time || ''} ${e.location ? `· ${escapeHtml(e.location)}` : ''}
+            </div>
+            ${e.meetLink ? `<div style="font-size: 9.5px; opacity: 0.95; display: inline-flex; align-items: center; gap: 3px">📹 Meet</div>` : ''}
+          </div>
+        `;
+      }).join('');
+
+      let nowIndicatorHtml = '';
+      if (d.isToday) {
+        const now = new Date();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        const currentTop = Math.round((currentMinutes / 60) * 52);
+        nowIndicatorHtml = `
+          <div style="position: absolute; top: ${currentTop}px; left: 0; right: 0; height: 2px; background: #ea4335; z-index: 8; pointer-events: none;" title="Horário atual">
+            <span style="position: absolute; left: -4px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: #ea4335;"></span>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="calendar-week-day-col" data-col-date="${d.dateKey}">
+          ${slotsHtml}
+          ${nowIndicatorHtml}
+          ${cardsHtml}
+        </div>
+      `;
+    }).join('');
+
+    bodyGrid.innerHTML = timeColHtml + dayColsHtml;
+
+    if (!bodyGrid.dataset.scrolled) {
+      bodyGrid.scrollTop = 8 * 52 - 16;
+      bodyGrid.dataset.scrolled = 'true';
+    }
+  }
+
+  function renderScheduleEvents() {
     const morningList = document.getElementById('agenda-morning-events');
     const afternoonList = document.getElementById('agenda-afternoon-events');
     const eveningList = document.getElementById('agenda-evening-events');
-    const overviewList = document.getElementById('events-overview-list');
 
     if (!morningList || !afternoonList || !eveningList) return;
 
-    const now = new Date();
-    const todayStr = now.toISOString().split('T')[0];
-    const tomorrow = new Date(now);
+    const curr = state.calendar.currentDate || new Date();
+    const todayStr = toDateKey(new Date());
+    const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    const tomorrowStr = toDateKey(tomorrow);
 
-    // Filtra por período e por conta selecionada
-    const filtered = state.calendar.events.filter(e => {
-      // Filtro de conta
+    const currDay = curr.getDay();
+    const startOfWeek = new Date(curr);
+    startOfWeek.setDate(curr.getDate() - currDay);
+    startOfWeek.setHours(0, 0, 0, 0);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+    const startOfWeekStr = toDateKey(startOfWeek);
+    const endOfWeekStr = toDateKey(endOfWeek);
+
+    const filtered = (state.calendar.events || []).filter(e => {
       if (state.calendar.accountFilter !== 'all' && e.accountEmail) {
         if (e.accountEmail !== state.calendar.accountFilter) return false;
       }
 
-      // Filtro de data
-      if (!e.start) return true;
-      const eventDate = e.start.split('T')[0];
+      const eventDate = getEventDateKey(e);
       if (state.calendar.periodFilter === 'hoje') return eventDate === todayStr;
       if (state.calendar.periodFilter === 'amanha') return eventDate === tomorrowStr;
+      if (state.calendar.periodFilter === 'semana') return eventDate >= startOfWeekStr && eventDate <= endOfWeekStr;
       return true;
     });
 
@@ -585,20 +1023,20 @@
     const buildEventHtml = (e) => {
       const color = e.accountColor || '#6EA1FF';
       return `
-        <div class="event-row ${e.isNext ? 'is-next' : ''}" style="${e.isNext ? 'border: 1px solid var(--accent-soft)' : ''}">
+        <div class="event-row ${e.isNext ? 'is-next' : ''}" data-event-id="${e.id}" style="cursor: pointer; ${e.isNext ? 'border: 1px solid var(--accent-soft)' : ''}">
           <span class="event-time">${e.time || 'Horário'}</span>
           <span class="event-dot" style="background: ${color}"></span>
           <div class="event-info">
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
-              <span class="event-title">${e.title}</span>
+              <span class="event-title">${escapeHtml(e.title)}</span>
               ${e.accountName || e.accountEmail ? `
                 <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: color-mix(in srgb, ${color} 15%, transparent); color: ${color}; font-weight: 500">
-                  ${e.accountName || e.accountEmail.split('@')[0]}
+                  ${escapeHtml(e.accountName || e.accountEmail.split('@')[0])}
                 </span>
               ` : ''}
               ${e.meetLink ? `<a href="${e.meetLink}" target="_blank" class="badge-pill" style="font-size: 11px; color: var(--accent); display: inline-flex; align-items: center; gap: 4px" title="Abrir Google Meet">Meet ↗</a>` : ''}
             </div>
-            <span class="event-meta">${e.meta || e.location || 'Compromisso'}</span>
+            <span class="event-meta">${escapeHtml(e.meta || e.location || 'Compromisso')}</span>
           </div>
           ${e.isNext ? '<span class="badge-pill">Próximo</span>' : ''}
           <button class="delete-event-btn" data-delete-event="${e.id}" data-event-account="${e.accountEmail || ''}" title="Excluir evento do Google Calendar" style="color: var(--text3); padding: 4px; border-radius: 6px; transition: color 0.15s">
@@ -613,20 +1051,137 @@
     morningList.innerHTML = morningEvents.length ? morningEvents.map(buildEventHtml).join('') : emptyHtml;
     afternoonList.innerHTML = afternoonEvents.length ? afternoonEvents.map(buildEventHtml).join('') : emptyHtml;
     eveningList.innerHTML = eveningEvents.length ? eveningEvents.map(buildEventHtml).join('') : emptyHtml;
+  }
 
-    if (overviewList) {
-      overviewList.innerHTML = state.calendar.events.slice(0, 4).map(e => `
-        <div class="event-row ${e.isNext ? 'is-next' : ''}">
-          <span class="event-time">${e.time || '10:00'}</span>
-          <span class="event-dot" style="background: ${e.accountColor || 'var(--accent)'}"></span>
-          <div class="event-info">
-            <span class="event-title">${e.title}</span>
-            <span class="event-meta">${e.accountName || e.accountEmail || 'Google Calendar'}</span>
-          </div>
-          ${e.isNext ? '<span class="badge-pill">Próximo</span>' : ''}
+  function renderOverviewEvents() {
+    const overviewList = document.getElementById('events-overview-list');
+    if (!overviewList) return;
+
+    overviewList.innerHTML = (state.calendar.events || []).slice(0, 4).map(e => `
+      <div class="event-row ${e.isNext ? 'is-next' : ''}" data-event-id="${e.id}" style="cursor: pointer">
+        <span class="event-time">${e.time || '10:00'}</span>
+        <span class="event-dot" style="background: ${e.accountColor || 'var(--accent)'}"></span>
+        <div class="event-info">
+          <span class="event-title">${escapeHtml(e.title)}</span>
+          <span class="event-meta">${escapeHtml(e.accountName || e.accountEmail || 'Google Calendar')}</span>
         </div>
-      `).join('');
+        ${e.isNext ? '<span class="badge-pill">Próximo</span>' : ''}
+      </div>
+    `).join('');
+  }
+
+  function updateCalendarNavBadge() {
+    const todayStr = toDateKey(new Date());
+    const todayCount = (state.calendar.events || []).filter(e => getEventDateKey(e) === todayStr).length;
+    const navBadge = document.querySelector('a[data-page="agenda"] .badge');
+    if (navBadge) {
+      navBadge.textContent = todayCount;
     }
+  }
+
+  function openEventDetails(event) {
+    if (!event) return;
+    const titleEl = document.getElementById('modal-event-detail-title');
+    const dotEl = document.getElementById('modal-event-detail-dot');
+    const accNameEl = document.getElementById('modal-event-detail-account-name');
+    const timeEl = document.getElementById('modal-event-detail-time');
+    const locRow = document.getElementById('modal-event-detail-location-row');
+    const locEl = document.getElementById('modal-event-detail-location');
+    const descRow = document.getElementById('modal-event-detail-desc-row');
+    const descEl = document.getElementById('modal-event-detail-desc');
+    const meetContainer = document.getElementById('modal-event-detail-meet-container');
+    const meetBtn = document.getElementById('modal-event-detail-meet-btn');
+    const deleteBtn = document.getElementById('modal-event-detail-btn-delete');
+
+    if (titleEl) titleEl.textContent = event.title || '(Sem título)';
+    if (dotEl) dotEl.style.background = event.accountColor || '#6EA1FF';
+    if (accNameEl) accNameEl.textContent = event.accountName || event.accountEmail || 'Google Calendar';
+
+    if (timeEl) {
+      let formatted = event.time || 'Horário não especificado';
+      if (event.start) {
+        const d = new Date(event.start);
+        if (!isNaN(d.getTime())) {
+          const dateStr = d.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+          let timeRange = event.time || '';
+          if (event.end) {
+            const eD = new Date(event.end);
+            if (!isNaN(eD.getTime())) {
+              const startH = String(d.getHours()).padStart(2, '0');
+              const startM = String(d.getMinutes()).padStart(2, '0');
+              const endH = String(eD.getHours()).padStart(2, '0');
+              const endM = String(eD.getMinutes()).padStart(2, '0');
+              timeRange = `${startH}:${startM} – ${endH}:${endM}`;
+            }
+          }
+          formatted = `${dateStr} · ${timeRange}`;
+        }
+      }
+      timeEl.textContent = formatted;
+    }
+
+    if (locRow && locEl) {
+      if (event.location && event.location.trim()) {
+        locRow.style.display = 'flex';
+        locEl.textContent = event.location;
+      } else {
+        locRow.style.display = 'none';
+      }
+    }
+
+    if (descRow && descEl) {
+      if (event.description && event.description.trim()) {
+        descRow.style.display = 'flex';
+        descEl.textContent = event.description;
+      } else {
+        descRow.style.display = 'none';
+      }
+    }
+
+    if (meetContainer && meetBtn) {
+      if (event.meetLink) {
+        meetContainer.style.display = 'block';
+        meetBtn.href = event.meetLink;
+      } else {
+        meetContainer.style.display = 'none';
+      }
+    }
+
+    if (deleteBtn) {
+      deleteBtn.dataset.deleteEvent = event.id;
+      deleteBtn.dataset.eventAccount = event.accountEmail || '';
+    }
+
+    openModal('modal-event-details');
+  }
+
+  function openNewEventModalWithDate(dateStr, hour = 9) {
+    const startInput = document.getElementById('event-start');
+    const endInput = document.getElementById('event-end');
+
+    const pad = n => String(n).padStart(2, '0');
+    const h = parseInt(hour, 10);
+    const startVal = `${dateStr}T${pad(h)}:00`;
+    const endVal = `${dateStr}T${pad(Math.min(h + 1, 23))}:00`;
+
+    if (startInput) startInput.value = startVal;
+    if (endInput) endInput.value = endVal;
+
+    openModal('modal-new-event');
+  }
+
+  function renderAllCalendarViews() {
+    updateCalendarPeriodTitle();
+    renderMonthView();
+    renderWeekView();
+    renderScheduleEvents();
+    renderOverviewEvents();
+    updateCalendarNavBadge();
+  }
+
+  // Mantém compatibilidade com chamadas existentes
+  function renderCalendarEvents() {
+    renderAllCalendarViews();
   }
 
   /**
@@ -665,6 +1220,7 @@
         end: eventData.end,
         location: eventData.location,
         meetLink: eventData.addMeetLink ? 'https://meet.google.com/new' : null,
+        description: eventData.description || '',
         accountEmail: targetAcc.email || 'rianvlnv@gmail.com',
         accountName: targetAcc.name || 'Rian',
         accountColor: targetAcc.color || '#6EA1FF',
@@ -981,6 +1537,123 @@
       if (e.target.closest('#btn-quick-add-event')) {
         e.preventDefault();
         openModal('modal-quick-add');
+        return;
+      }
+
+      // Alternância de Modos do Calendário (Mês, Semana, Programação)
+      const calViewBtn = e.target.closest('.calendar-view-btn');
+      if (calViewBtn && calViewBtn.dataset.viewMode) {
+        e.preventDefault();
+        setCalendarViewMode(calViewBtn.dataset.viewMode);
+        return;
+      }
+
+      // Navegação do Calendário: Hoje
+      if (e.target.closest('#cal-btn-today')) {
+        e.preventDefault();
+        state.calendar.currentDate = new Date();
+        renderAllCalendarViews();
+        return;
+      }
+
+      // Navegação do Calendário: Anterior (<)
+      if (e.target.closest('#cal-btn-prev')) {
+        e.preventDefault();
+        const d = new Date(state.calendar.currentDate || new Date());
+        if (state.calendar.viewMode === 'month') {
+          d.setMonth(d.getMonth() - 1);
+        } else if (state.calendar.viewMode === 'week') {
+          d.setDate(d.getDate() - 7);
+        } else {
+          d.setDate(d.getDate() - 7);
+        }
+        state.calendar.currentDate = d;
+        renderAllCalendarViews();
+        return;
+      }
+
+      // Navegação do Calendário: Próximo (>)
+      if (e.target.closest('#cal-btn-next')) {
+        e.preventDefault();
+        const d = new Date(state.calendar.currentDate || new Date());
+        if (state.calendar.viewMode === 'month') {
+          d.setMonth(d.getMonth() + 1);
+        } else if (state.calendar.viewMode === 'week') {
+          d.setDate(d.getDate() + 7);
+        } else {
+          d.setDate(d.getDate() + 7);
+        }
+        state.calendar.currentDate = d;
+        renderAllCalendarViews();
+        return;
+      }
+
+      // Detalhes do Evento (Pílula do mês, Card da semana, Linha da lista ou do dashboard)
+      const eventTarget = e.target.closest('.cal-event-pill, .calendar-week-event-card, .event-row');
+      if (eventTarget && !e.target.closest('.delete-event-btn') && !e.target.closest('a')) {
+        const eventId = eventTarget.dataset.eventId;
+        if (eventId) {
+          const ev = state.calendar.events.find(x => String(x.id) === String(eventId));
+          if (ev) {
+            e.preventDefault();
+            e.stopPropagation();
+            openEventDetails(ev);
+            return;
+          }
+        }
+      }
+
+      // Botão "+X mais" no Mês -> muda foco para Semana
+      const moreBtn = e.target.closest('.cal-event-more');
+      if (moreBtn && moreBtn.dataset.moreDate) {
+        e.preventDefault();
+        e.stopPropagation();
+        state.calendar.currentDate = new Date(moreBtn.dataset.moreDate + 'T12:00:00');
+        setCalendarViewMode('week');
+        return;
+      }
+
+      // Clique em célula de dia no Mês -> Novo Evento pré-preenchido
+      const dayCell = e.target.closest('.calendar-day-cell');
+      if (dayCell && !e.target.closest('.cal-event-pill') && !e.target.closest('.cal-event-more')) {
+        e.preventDefault();
+        const dateStr = dayCell.dataset.dayDate;
+        if (dateStr) {
+          openNewEventModalWithDate(dateStr, 9);
+        }
+        return;
+      }
+
+      // Clique em slot de horário na Semana -> Novo Evento pré-preenchido
+      const hourSlot = e.target.closest('.calendar-week-hour-slot');
+      if (hourSlot && !e.target.closest('.calendar-week-event-card')) {
+        e.preventDefault();
+        const slotDate = hourSlot.dataset.slotDate;
+        const slotHour = hourSlot.dataset.slotHour || 9;
+        if (slotDate) {
+          openNewEventModalWithDate(slotDate, slotHour);
+        }
+        return;
+      }
+
+      // Clique em cabeçalho do dia na Semana -> Novo Evento pré-preenchido
+      const weekHeaderDay = e.target.closest('.calendar-week-header-day');
+      if (weekHeaderDay && weekHeaderDay.dataset.date) {
+        e.preventDefault();
+        openNewEventModalWithDate(weekHeaderDay.dataset.date, 9);
+        return;
+      }
+
+      // Excluir Evento pelo Modal de Detalhes
+      const modalDelBtn = e.target.closest('#modal-event-detail-btn-delete');
+      if (modalDelBtn) {
+        e.preventDefault();
+        const eventId = modalDelBtn.dataset.deleteEvent;
+        const eventAccount = modalDelBtn.dataset.eventAccount;
+        if (eventId && confirm('Deseja realmente excluir este evento do Google Calendar?')) {
+          closeModal('modal-event-details');
+          deleteGoogleCalendarEvent(eventId, eventAccount);
+        }
         return;
       }
 

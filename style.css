@@ -953,3 +953,395 @@ input::placeholder, textarea::placeholder {
   from { opacity: 0; transform: scale(0.97); }
   to { opacity: 1; transform: scale(1); }
 }
+
+/* ==========================================================================
+   Google Calendar View Styles (Mês, Semana, Programação)
+   ========================================================================== */
+
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Barra de ferramentas do Calendário (Hoje, <, >, Mês/Ano, Modos) */
+.calendar-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-soft);
+  gap: 12px;
+  flex-wrap: wrap;
+  background: var(--side);
+}
+
+.calendar-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calendar-period-title {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text);
+  margin-left: 8px;
+  min-width: 170px;
+}
+
+.calendar-btn-arrow {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.calendar-btn-arrow:hover {
+  background: var(--hover);
+  border-color: var(--text3);
+}
+
+.calendar-view-mode-tabs {
+  display: flex;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.calendar-view-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text2);
+  transition: var(--transition);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.calendar-view-btn:hover {
+  color: var(--text);
+}
+
+.calendar-view-btn.active {
+  background: var(--raised);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* ==============================
+   VISUALIZAÇÃO EM MODO MÊS
+   ============================== */
+.calendar-month-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.calendar-weekdays-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--side);
+}
+
+.calendar-weekday-cell {
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text3);
+}
+
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: var(--border-soft);
+  gap: 1px; /* Linha de divisão entre os dias */
+}
+
+.calendar-day-cell {
+  background: var(--card);
+  min-height: 115px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.calendar-day-cell:hover {
+  background: var(--hover);
+}
+
+.calendar-day-cell.other-month {
+  background: var(--bg);
+  opacity: 0.45;
+}
+
+.calendar-day-cell.other-month:hover {
+  opacity: 0.8;
+}
+
+.calendar-day-cell.today {
+  background: var(--accent-soft);
+}
+
+.calendar-day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.calendar-day-number {
+  font-size: 12px;
+  font-weight: 600;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+}
+
+.calendar-day-cell.today .calendar-day-number {
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.calendar-day-events {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-y: auto;
+  max-height: 95px;
+}
+
+/* Pílula / Chip de Evento estilo Google Calendar */
+.cal-event-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: transform 0.1s ease, filter 0.15s ease;
+  border-left: 3px solid rgba(255, 255, 255, 0.8);
+}
+
+.cal-event-pill:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
+.cal-event-pill .event-pill-time {
+  font-size: 10.5px;
+  font-weight: 600;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.cal-event-pill .event-pill-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cal-event-more {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  padding: 1px 4px;
+  cursor: pointer;
+}
+
+.cal-event-more:hover {
+  text-decoration: underline;
+}
+
+/* ==============================
+   VISUALIZAÇÃO EM MODO SEMANA
+   ============================== */
+.calendar-week-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.calendar-week-header {
+  display: grid;
+  grid-template-columns: 55px repeat(7, minmax(110px, 1fr));
+  min-width: 825px;
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--side);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.calendar-week-header-time {
+  padding: 8px 4px;
+  font-size: 11px;
+  color: var(--text3);
+  text-align: center;
+  border-right: 1px solid var(--border-soft);
+}
+
+.calendar-week-header-day {
+  padding: 10px 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border-right: 1px solid var(--border-soft);
+}
+
+.calendar-week-header-day:last-child {
+  border-right: none;
+}
+
+.calendar-week-dayname {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.calendar-week-daynum {
+  font-size: 18px;
+  font-weight: 600;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-week-header-day.today .calendar-week-daynum {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.calendar-week-body {
+  display: grid;
+  grid-template-columns: 55px repeat(7, minmax(110px, 1fr));
+  min-width: 825px;
+  max-height: 560px;
+  overflow-y: auto;
+  position: relative;
+  scrollbar-width: thin;
+}
+
+.calendar-week-time-col {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-soft);
+  background: var(--side);
+}
+
+.calendar-week-hour-label {
+  height: 52px;
+  font-size: 11px;
+  color: var(--text3);
+  text-align: right;
+  padding-right: 8px;
+  transform: translateY(-8px);
+}
+
+.calendar-week-day-col {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-soft);
+  position: relative;
+}
+
+.calendar-week-day-col:last-child {
+  border-right: none;
+}
+
+.calendar-week-hour-slot {
+  height: 52px;
+  border-bottom: 1px solid var(--border-soft);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.calendar-week-hour-slot:hover {
+  background: var(--hover);
+}
+
+/* Evento em bloco na grade da semana */
+.calendar-week-event-card {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 11.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.15s ease, filter 0.15s ease;
+  z-index: 5;
+}
+
+.calendar-week-event-card:hover {
+  filter: brightness(1.15);
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .calendar-day-cell {
+    min-height: 75px;
+    padding: 4px;
+  }
+  .cal-event-pill .event-pill-time {
+    display: none;
+  }
+  .calendar-period-title {
+    font-size: 17px;
+    min-width: 120px;
+  }
+}
+
